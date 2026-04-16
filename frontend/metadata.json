@@ -1,0 +1,11 @@
+{
+  "name": "Aura Voice Bot",
+  "description": "A high-fidelity, real-time voice-to-voice AI assistant powered by Gemini Multimodal Live API.",
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "voice_interaction",
+    "real_time_ai"
+  ]
+}

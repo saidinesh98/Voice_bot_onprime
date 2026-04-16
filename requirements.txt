@@ -1,0 +1,28 @@
+# requirements_local.txt
+# For: Microphone, STT, TTS (NO LLM)
+
+# Core audio processing
+sounddevice
+pyaudio
+numpy
+
+# STT (Speech-to-Text)
+faster-whisper
+
+# TTS (Text-to-Speech)
+pyttsx3
+
+# VAD (Voice Activity Detection)
+silero-vad
+torch --index-url https://download.pytorch.org/whl/cpu
+
+# HTTP client for VM communication
+requests
+
+gtts 
+pygame
+langdetect
+
+fastapi
+uvicorn
+websockets
