@@ -26,3 +26,5 @@ langdetect
 fastapi
 uvicorn
 websockets
+python-jose[cryptography]
+python-dotenv

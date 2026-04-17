@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Mic, MicOff, Volume2, VolumeX, Settings, MessageSquare, Sparkles, Power, Loader2 } from 'lucide-react';
+import { Mic, MicOff, Volume2, VolumeX, Settings, MessageSquare, Sparkles, Power, Loader2, LogOut, User } from 'lucide-react';
 import { LocalVoiceBotClient } from '@/lib/local-voicebot-client';
+import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -23,6 +24,7 @@ export default function VoiceBot() {
   const [audioLevel, setAudioLevel] = useState(0);
   const [latency, setLatency] = useState(0.12);
   const [isThinking, setIsThinking] = useState(false);
+  const { token, username, logout } = useAuth();
 
   const [useLocalBackend, setUseLocalBackend] = useState(true);
 
@@ -146,6 +148,7 @@ export default function VoiceBot() {
       await (clientRef.current as LocalVoiceBotClient).connect({
         voiceName: voice,
         audioContext: audioContextRef.current,
+        token: token || undefined, // Pass Keycloak JWT
       }, callbacks);
       await (clientRef.current as LocalVoiceBotClient).startMicrophone();
       
@@ -178,14 +181,33 @@ export default function VoiceBot() {
 
       {/* Header */}
       <header className="relative z-10 px-8 py-6 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-[#3b82f6] to-[#8b5cf6] shadow-[0_0_15px_rgba(59,130,246,0.5)]" />
-          <h1 className="text-lg font-bold tracking-widest uppercase">Aura AI</h1>
+        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3">
+            <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-[#3b82f6] to-[#8b5cf6] shadow-[0_0_15px_rgba(59,130,246,0.5)]" />
+            <h1 className="text-lg font-bold tracking-widest uppercase">Aura AI</h1>
+          </div>
+
+          <div className="h-6 w-[1px] bg-white/10" />
+
+          <div className="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full border border-white/10">
+            <User className="w-3.5 h-3.5 text-blue-400" />
+            <span className="text-[10px] font-mono text-gray-400 uppercase tracking-wider">{username || 'Guest'}</span>
+          </div>
         </div>
 
-        <div className={`glass-panel px-4 py-1.5 rounded-full flex items-center gap-2 text-xs font-medium transition-all duration-500 ${isConnected ? 'opacity-100' : 'opacity-40'}`}>
-          <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-[#10b981] shadow-[0_0_10px_#10b981]' : 'bg-white/20'}`} />
-          <span>{isConnected ? (useLocalBackend ? 'Local Bot Active' : 'Gemini Active') : 'Bot Offline'}</span>
+        <div className="flex items-center gap-4">
+          <div className={`glass-panel px-4 py-1.5 rounded-full flex items-center gap-2 text-xs font-medium transition-all duration-500 ${isConnected ? 'opacity-100' : 'opacity-40'}`}>
+            <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-[#10b981] shadow-[0_0_10px_#10b981]' : 'bg-white/20'}`} />
+            <span>{isConnected ? (useLocalBackend ? 'Local Bot Active' : 'Gemini Active') : 'Bot Offline'}</span>
+          </div>
+
+          <button 
+            onClick={() => logout()}
+            className="p-2 rounded-full bg-white/5 border border-white/10 hover:bg-red-500/20 hover:border-red-500/30 transition-all group"
+            title="Logout"
+          >
+            <LogOut className="w-4 h-4 text-gray-400 group-hover:text-red-400" />
+          </button>
         </div>
       </header>
 

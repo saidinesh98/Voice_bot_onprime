@@ -1,6 +1,7 @@
 export type LocalConfig = {
   voiceName?: string;
   audioContext?: AudioContext;
+  token?: string;
 };
 
 export class LocalVoiceBotClient {
@@ -23,7 +24,10 @@ export class LocalVoiceBotClient {
     this.audioContext = config.audioContext || null;
     
     return new Promise<void>((resolve, reject) => {
-      this.ws = new WebSocket(`ws://localhost:8001/ws`);
+      const url = config.token 
+        ? `ws://localhost:8001/ws?token=${config.token}`
+        : `ws://localhost:8001/ws`;
+      this.ws = new WebSocket(url);
       
       this.ws.onopen = () => {
         this.isConnected = true;
