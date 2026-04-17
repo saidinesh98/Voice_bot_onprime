@@ -64,9 +64,14 @@ class DatabaseManager:
             
             # Seed initial property data
             initial_properties = [
-                ("SAMANA Hills South 2", "Arjan", "AED 570,000", "Luxury units with private pools."),
-                ("SAMANA Palm Vista", "Dubai Islands", "AED 670,000", "Premium beachfront living."),
-                ("SAMANA Creek Horizon", "Dubai Creek", "AED 370,000", "Modern creek-front apartments.")
+                ("SAMANA Hills South 2", "Arjan", "AED 570,000", "Private pools in every unit."),
+                ("SAMANA Barari Heights", "Majan", "AED 970,000", "Nature-inspired luxury living."),
+                ("SAMANA Palm Vista", "Dubai Islands", "AED 670,000", "Stunning waterfront views."),
+                ("SAMANA Creek Horizon", "Dubai Creek", "AED 370,000", "Incredible entry point for investors."),
+                ("SAMANA Sky Views", "Arjan", "AED 680,000", "Iconic architecture that stands out."),
+                ("SAMANA Golf Avenue", "Studio City", "AED 650,000", "Perfect for a resort-style lifestyle."),
+                ("SAMANA Golf Views", "Sports City", "AED 720,000", "Overlooks world-class golf courses."),
+                ("SAMANA Greens", "Arjan", "AED 550,000", "Sustainable, eco-friendly community.")
             ]
             
             for name, loc, price, desc in initial_properties:

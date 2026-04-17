@@ -1,0 +1,71 @@
+services:
+  # 1. Database Service
+  postgres:
+    image: postgres:15-alpine
+    container_name: aura-postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: postgres
+    volumes:
+      - aura-db-data:/var/lib/postgresql/data
+
+  # 2. Identity Service
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.5.4
+    container_name: aura-keycloak
+    restart: always
+    command: start-dev --spi-theme-static-max-age=-1 --spi-theme-cache-themes=false --spi-theme-cache-templates=false
+    ports:
+      - "8080:8080"
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_HOSTNAME_STRICT: "false"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
+      KC_HTTP_ENABLED: "true"
+    volumes:
+      - ./aura-ai-theme:/opt/keycloak/themes/aura-ai:ro
+
+  # 3. AI Backend
+  aura-backend:
+    build: .
+    container_name: aura-backend
+    restart: always
+    ports:
+      - "8001:8001"
+    environment:
+      - DB_HOST=postgres
+      - DB_NAME=postgres
+      - DB_USER=postgres
+      - DB_PASS=root
+      - DB_PORT=5432
+      - KEYCLOAK_URL=http://keycloak:8080
+      - LLM_SERVER_URL=http://aura-llm:8000/v1/chat/completions
+    depends_on:
+      - postgres
+      - keycloak
+
+  # 4. Frontend (Served by Nginx)
+  aura-frontend:
+    build: ./frontend
+    container_name: aura-frontend
+    restart: always
+    ports:
+      - "3000:80"
+    depends_on:
+      - aura-backend
+
+  # 5. LLM Server (Existing Script)
+  aura-llm:
+    build: ./llm_server
+    container_name: aura-llm
+    restart: always
+    ports:
+      - "8000:8000"
+
+volumes:
+  aura-db-data:
