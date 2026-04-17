@@ -1,0 +1,4 @@
+# Set optimal thread counts
+export OMP_NUM_THREADS=8      # For Whisper/numpy
+export OLLAMA_NUM_THREAD=24   # For LLM (leave 8 for OS)
+export NUMEXPR_NUM_THREADS=4  # For numpy expressions
