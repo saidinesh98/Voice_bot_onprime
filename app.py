@@ -46,8 +46,8 @@ async def websocket_endpoint(websocket: WebSocket):
     print("\n" + "="*60)
     print("🚀  FRONTEND CONNECTED")
     print("="*60)
-    
     audio_buffer = []
+    is_listening = True
     
     try:
         while True:
@@ -68,8 +68,15 @@ async def websocket_endpoint(websocket: WebSocket):
                 if data.get("type") == "config":
                     print(f"⚙️  Config received: {data}")
                     continue
+                if data.get("type") == "resume_listening":
+                    print("\n🔄 Bot finished speaking. Resuming listening...")
+                    is_listening = True
+                    audio_buffer = [] # Clear any stale audio received while speaking
+                    continue
             
             if "bytes" in message:
+                if not is_listening:
+                    continue
                 audio_chunk = message["bytes"]
                 # Convert Int16 PCM to float32 for Whisper
                 chunk_np = np.frombuffer(audio_chunk, dtype=np.int16).astype(np.float32) / 32768.0
@@ -94,6 +101,12 @@ async def websocket_endpoint(websocket: WebSocket):
                         print(f"📝 You: {text}")
                         # Send transcription back to UI
                         await websocket.send_json({"type": "transcription", "text": text})
+                        
+                        # Stop listening until bot finishes responding and speaking
+                        is_listening = False
+                        
+                        # Clear buffer immediately to prevent stale audio from affecting next turn
+                        audio_buffer = []
                         
                         # Get LLM response and buffer it
                         print("🤔 Thinking...", end=' ', flush=True)
@@ -129,8 +142,7 @@ async def websocket_endpoint(websocket: WebSocket):
                         print(f"\n🤖 Bot: {full_response.strip()}")
                         print(f"🔊 Speaking response...\n")
                         
-                        # Clear buffer after successful turn
-                        audio_buffer = []
+                        audio_buffer = [] # Redundant but safe
                     elif len(audio_buffer) > 100: # Max 6 seconds of no transcription
                         # Slide window
                         audio_buffer = audio_buffer[20:] 

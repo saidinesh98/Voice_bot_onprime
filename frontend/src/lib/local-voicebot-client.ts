@@ -8,6 +8,7 @@ export class LocalVoiceBotClient {
   private audioContext: AudioContext | null = null;
   private stream: MediaStream | null = null;
   private isConnected = false;
+  private isRecordingEnabled = true;
 
   constructor() {}
 
@@ -87,7 +88,7 @@ export class LocalVoiceBotClient {
     const processor = recordingContext.createScriptProcessor(4096, 1, 1);
     
     processor.onaudioprocess = (e) => {
-      if (!this.isConnected || !this.ws || this.ws.readyState !== WebSocket.OPEN) return;
+      if (!this.isConnected || !this.ws || this.ws.readyState !== WebSocket.OPEN || !this.isRecordingEnabled) return;
       const inputData = e.inputBuffer.getChannelData(0);
       const pcmData = this.float32ToInt16(inputData);
       this.ws.send(pcmData.buffer);
@@ -107,6 +108,17 @@ export class LocalVoiceBotClient {
     }
     if ((this as any).recordingContext) {
       (this as any).recordingContext.close();
+    }
+  }
+
+  setRecordingEnabled(enabled: boolean) {
+    this.isRecordingEnabled = enabled;
+    console.log(`🎤 Microphone ${enabled ? 'resumed' : 'paused'} sending audio`);
+  }
+
+  send(data: any) {
+    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+      this.ws.send(JSON.stringify(data));
     }
   }
 

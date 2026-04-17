@@ -22,6 +22,7 @@ export default function VoiceBot() {
   const [voice, setVoice] = useState<typeof VOICES[number]>('Zephyr');
   const [audioLevel, setAudioLevel] = useState(0);
   const [latency, setLatency] = useState(0.12);
+  const [isThinking, setIsThinking] = useState(false);
 
   const [useLocalBackend, setUseLocalBackend] = useState(true);
 
@@ -36,7 +37,13 @@ export default function VoiceBot() {
   const playNextInQueue = useCallback(() => {
     if (audioQueueRef.current.length === 0 || isPlayingRef.current || !audioContextRef.current) {
       isPlayingRef.current = false;
-      if (audioQueueRef.current.length === 0) setAudioLevel(0);
+      if (audioQueueRef.current.length === 0) {
+        setAudioLevel(0);
+        // Resume listening when bot finishes speaking
+        clientRef.current?.setRecordingEnabled(true);
+        // Signal backend to start accepting audio again
+        clientRef.current?.send({ type: "resume_listening" });
+      }
       return;
     }
 
@@ -105,8 +112,14 @@ export default function VoiceBot() {
       const callbacks = {
         onTranscription: (text: string) => {
           setTranscript(prev => [...prev, { role: 'user', text }]);
+          // Pause listening while bot is thinking/responding
+          clientRef.current?.setRecordingEnabled(false);
+          setIsThinking(true);
         },
-        onText: (text: string) => {
+        onMessage: (text: string) => {
+          // Ensure recording is paused if we get text stream
+          clientRef.current?.setRecordingEnabled(false);
+          setIsThinking(false);
           setCurrentBotText(prev => prev + text);
           setTranscript(prev => {
             const last = prev[prev.length - 1];
@@ -117,6 +130,9 @@ export default function VoiceBot() {
           });
         },
         onAudio: (data: Float32Array) => {
+          // Double check recording is paused during audio playback
+          clientRef.current?.setRecordingEnabled(false);
+          setIsThinking(false);
           audioQueueRef.current.push(data);
           playNextInQueue();
         },
@@ -234,13 +250,32 @@ export default function VoiceBot() {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -15 }}
-                className="space-y-3"
+                className="space-y-4"
               >
-                <p className="text-2xl font-light leading-tight text-white">
+                {/* Speaker Indicator */}
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  {currentBotText || (transcript.length > 0 && transcript[transcript.length - 1].role === 'bot') ? (
+                    <>
+                      <Sparkles className="w-4 h-4 text-[#3b82f6]" />
+                      <span className="text-[10px] font-bold tracking-[3px] text-[#3b82f6] uppercase">Aura</span>
+                    </>
+                  ) : transcript.length > 0 ? (
+                    <>
+                      <MessageSquare className="w-4 h-4 text-[#8b5cf6]" />
+                      <span className="text-[10px] font-bold tracking-[3px] text-[#8b5cf6] uppercase">You</span>
+                    </>
+                  ) : null}
+                </div>
+
+                <p className="text-2xl font-light leading-tight text-white min-h-[1.5em]">
                   {currentBotText || (transcript.length > 0 ? transcript[transcript.length - 1].text : "I'm listening...")}
                 </p>
                 <p className="text-base text-[#64748b] italic">
-                  {currentBotText ? "Aura is speaking..." : "Waiting for your voice..."}
+                  {currentBotText 
+                    ? "Aura is speaking..." 
+                    : isThinking 
+                      ? "Aura is thinking..." 
+                      : "Waiting for your voice..."}
                 </p>
               </motion.div>
             ) : (
