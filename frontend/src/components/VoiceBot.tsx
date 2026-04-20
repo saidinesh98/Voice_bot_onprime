@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Mic, MicOff, Volume2, VolumeX, Settings, MessageSquare, Sparkles, Power, Loader2, LogOut, User } from 'lucide-react';
+import { Mic, MicOff, Volume2, VolumeX, Settings, MessageSquare, Sparkles, Power, Loader2, LogOut, User, Activity } from 'lucide-react';
 import { LocalVoiceBotClient } from '@/lib/local-voicebot-client';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -51,7 +51,7 @@ export default function VoiceBot() {
 
     const audioData = audioQueueRef.current.shift()!;
     isPlayingRef.current = true;
-    
+
     // Calculate audio level for visualization
     const sum = audioData.reduce((a, b) => a + Math.abs(b), 0);
     setAudioLevel(Math.min(1, (sum / audioData.length) * 5));
@@ -71,12 +71,12 @@ export default function VoiceBot() {
       source.connect(gainNode);
       gainNode.connect(audioContextRef.current.destination);
     }
-    
+
     source.onended = () => {
       isPlayingRef.current = false;
       playNextInQueue();
     };
-    
+
     source.start();
   }, [volume]);
 
@@ -100,7 +100,7 @@ export default function VoiceBot() {
       if (!audioContextRef.current) {
         audioContextRef.current = new AudioContext({ sampleRate: 24000 });
       }
-      
+
       if (audioContextRef.current.state === 'suspended') {
         await audioContextRef.current.resume();
       }
@@ -151,7 +151,7 @@ export default function VoiceBot() {
         token: token || undefined, // Pass Keycloak JWT
       }, callbacks);
       await (clientRef.current as LocalVoiceBotClient).startMicrophone();
-      
+
       setIsConnected(true);
       console.log("🎤 Microphone started for local backend");
     } catch (err) {
@@ -182,9 +182,15 @@ export default function VoiceBot() {
       {/* Header */}
       <header className="relative z-10 px-8 py-6 flex items-center justify-between">
         <div className="flex items-center gap-6">
-          <div className="flex items-center gap-3">
-            <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-[#3b82f6] to-[#8b5cf6] shadow-[0_0_15px_rgba(59,130,246,0.5)]" />
-            <h1 className="text-lg font-bold tracking-widest uppercase">Aura AI</h1>
+          <div className="flex items-center gap-3 group cursor-pointer">
+            <div className="relative flex items-center justify-center">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#3b82f6] to-[#8b5cf6] rounded-lg blur-md opacity-40 group-hover:opacity-80 transition-opacity duration-500" />
+              <div className="relative w-8 h-8 rounded-lg bg-[#0f172a] border border-white/10 flex items-center justify-center overflow-hidden">
+                <Activity className="w-5 h-5 text-blue-400 group-hover:text-white transition-all duration-500 group-hover:scale-110" />
+                <div className="absolute inset-0 bg-gradient-to-t from-blue-500/10 to-transparent pointer-events-none" />
+              </div>
+            </div>
+            <h1 className="text-lg font-bold tracking-widest uppercase bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60 group-hover:from-white group-hover:to-white transition-all duration-500">Aura AI</h1>
           </div>
 
           <div className="h-6 w-[1px] bg-white/10" />
@@ -201,7 +207,7 @@ export default function VoiceBot() {
             <span>{isConnected ? (useLocalBackend ? 'Local Bot Active' : 'Gemini Active') : 'Bot Offline'}</span>
           </div>
 
-          <button 
+          <button
             onClick={() => logout()}
             className="p-2 rounded-full bg-white/5 border border-white/10 hover:bg-red-500/20 hover:border-red-500/30 transition-all group"
             title="Logout"
@@ -213,24 +219,24 @@ export default function VoiceBot() {
 
       {/* Main Content */}
       <main className="relative z-10 flex-1 flex flex-col items-center justify-center px-8 py-4">
-        
+
         {/* Visualizer Area */}
         <div className="relative w-[300px] h-[300px] flex items-center justify-center">
           {/* Concentric Rings */}
-          <motion.div 
+          <motion.div
             animate={{ scale: isConnected ? [1, 1.05, 1] : 1, opacity: isConnected ? 0.5 : 0.2 }}
             transition={{ duration: 4, repeat: Infinity }}
-            className="absolute w-full h-full border border-white/10 rounded-full" 
+            className="absolute w-full h-full border border-white/10 rounded-full"
           />
-          <motion.div 
+          <motion.div
             animate={{ scale: isConnected ? [1, 1.08, 1] : 1, opacity: isConnected ? 0.3 : 0.1 }}
             transition={{ duration: 5, repeat: Infinity, delay: 0.5 }}
-            className="absolute w-[85%] h-[85%] border border-[#3b82f6]/20 rounded-full" 
+            className="absolute w-[85%] h-[85%] border border-[#3b82f6]/20 rounded-full"
           />
-          <motion.div 
+          <motion.div
             animate={{ scale: isConnected ? [1, 1.1, 1] : 1, opacity: isConnected ? 0.2 : 0.05 }}
             transition={{ duration: 6, repeat: Infinity, delay: 1 }}
-            className="absolute w-[70%] h-[70%] border border-[#8b5cf6]/20 rounded-full" 
+            className="absolute w-[70%] h-[70%] border border-[#8b5cf6]/20 rounded-full"
           />
 
           {/* Core Orb */}
@@ -245,15 +251,21 @@ export default function VoiceBot() {
               scale: { type: "spring", stiffness: 300, damping: 20 },
               boxShadow: { duration: 2, repeat: Infinity }
             }}
-            className="w-[100px] h-[100px] bg-white rounded-full z-10"
-          />
+            className="w-[120px] h-[120px] rounded-full z-10 flex items-center justify-center relative overflow-hidden group/orb cursor-pointer"
+          >
+            <img 
+              src="/aura-logo.png" 
+              alt="Aura Logo" 
+              className={`w-full h-full object-contain transition-all duration-700 ${isConnected ? 'opacity-100 scale-100' : 'opacity-60 scale-95'}`}
+            />
+          </motion.div>
 
           {/* Wave Bars */}
           <div className="absolute -bottom-12 flex gap-1.5 items-end h-[40px]">
             {[...Array(8)].map((_, i) => (
               <motion.div
                 key={i}
-                animate={{ 
+                animate={{
                   height: isConnected ? [8, 15 + Math.random() * 30 * audioLevel, 8] : 4,
                   opacity: isConnected ? 0.6 : 0.2
                 }}
@@ -293,10 +305,10 @@ export default function VoiceBot() {
                   {currentBotText || (transcript.length > 0 ? transcript[transcript.length - 1].text : "I'm listening...")}
                 </p>
                 <p className="text-base text-[#64748b] italic">
-                  {currentBotText 
-                    ? "Aura is speaking..." 
-                    : isThinking 
-                      ? "Aura is thinking..." 
+                  {currentBotText
+                    ? "Aura is speaking..."
+                    : isThinking
+                      ? "Aura is thinking..."
                       : "Waiting for your voice..."}
                 </p>
               </motion.div>
@@ -312,7 +324,7 @@ export default function VoiceBot() {
                     {useLocalBackend ? 'Connected to local Python backend' : 'Real-time voice conversation powered by Gemini'}
                   </p>
                 </div>
-                <button 
+                <button
                   onClick={handleConnect}
                   disabled={isConnecting}
                   className="px-6 py-3 bg-white text-[#050508] rounded-full font-bold tracking-wider hover:scale-105 active:scale-95 transition-all flex items-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.15)] disabled:opacity-50 text-sm"
@@ -353,7 +365,7 @@ export default function VoiceBot() {
             {/* Input Group */}
             <div className="flex items-center gap-4">
               <Tooltip>
-                <TooltipTrigger 
+                <TooltipTrigger
                   onClick={() => setIsMuted(!isMuted)}
                   className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 ${isMuted ? 'bg-red-500/80 border border-red-400' : 'bg-white/5 border border-white/10 hover:bg-white/10'}`}
                 >
@@ -362,7 +374,7 @@ export default function VoiceBot() {
                 <TooltipContent>Toggle Microphone</TooltipContent>
               </Tooltip>
 
-              <button 
+              <button
                 onClick={handleConnect}
                 disabled={isConnecting}
                 className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 ${isConnected ? 'bg-red-500/80 border border-red-400 hover:scale-105' : 'bg-white/10 border border-white/20 hover:bg-white/20 hover:scale-105'}`}
@@ -382,7 +394,7 @@ export default function VoiceBot() {
             {/* Volume Group */}
             <div className="flex items-center gap-6 min-w-[200px] shrink-0">
               <Tooltip>
-                <TooltipTrigger 
+                <TooltipTrigger
                   onClick={() => {
                     if (volume > 0) {
                       setPrevVolume(volume);
@@ -393,17 +405,17 @@ export default function VoiceBot() {
                   }}
                   className="flex items-center justify-center group cursor-pointer shrink-0"
                 >
-                    {volume === 0 ? (
-                      <VolumeX className="w-6 h-6 text-red-400 transition-all group-hover:scale-110" />
-                    ) : (
-                      <Volume2 className="w-6 h-6 text-[#64748b] transition-all group-hover:scale-110 group-hover:text-white" />
-                    )}
+                  {volume === 0 ? (
+                    <VolumeX className="w-6 h-6 text-red-400 transition-all group-hover:scale-110" />
+                  ) : (
+                    <Volume2 className="w-6 h-6 text-[#64748b] transition-all group-hover:scale-110 group-hover:text-white" />
+                  )}
                 </TooltipTrigger>
                 <TooltipContent>Click to Mute</TooltipContent>
               </Tooltip>
 
               <div className="relative flex items-center w-32 group">
-                <input 
+                <input
                   type="range"
                   min="0"
                   max="100"
@@ -430,9 +442,8 @@ export default function VoiceBot() {
                   <button
                     key={v}
                     onClick={() => setVoice(v)}
-                    className={`px-4 py-2 rounded-xl text-[10px] font-bold tracking-tighter transition-all duration-300 ${
-                      voice === v ? 'bg-[#3b82f6] text-white shadow-[0_0_15px_rgba(59,130,246,0.5)]' : 'bg-white/5 text-[#64748b] hover:bg-white/10'
-                    }`}
+                    className={`px-4 py-2 rounded-xl text-[10px] font-bold tracking-tighter transition-all duration-300 ${voice === v ? 'bg-[#3b82f6] text-white shadow-[0_0_15px_rgba(59,130,246,0.5)]' : 'bg-white/5 text-[#64748b] hover:bg-white/10'
+                      }`}
                   >
                     {v.toUpperCase()}
                   </button>
