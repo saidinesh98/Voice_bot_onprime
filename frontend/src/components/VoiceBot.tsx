@@ -141,6 +141,8 @@ export default function VoiceBot() {
         onError: (err: any) => {
           console.error("VoiceBot Error:", err);
           setIsConnected(false);
+          setIsThinking(false);
+          setAudioLevel(0);
         }
       };
 

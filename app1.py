@@ -9,6 +9,7 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from gtts import gTTS
+from datetime import datetime
 
 # Multi-lingual components
 from multi_lingual.stt import STT
@@ -143,47 +144,49 @@ async def websocket_endpoint(websocket: WebSocket):
                         is_listening = False
                         audio_buffer = []
                         
-                        # Get LLM response and buffer it
-                        print(f"🤔 Thinking in {detected_lang.upper()}...", end=' ', flush=True)
-                        
-                        # Define language map for gTTS
-                        lang_map = {
-                            'hi': 'hi', 'ta': 'ta', 'te': 'te', 'ml': 'ml', 'bn': 'bn',
-                            'ar': 'ar', 'en': 'en', 'fr': 'fr', 'de': 'de', 'es': 'es', 'ko': 'ko', 'pl': 'pl'
-                        }
-                        gtts_lang = lang_map.get(detected_lang, detected_lang[:2])
+                        try:
+                            # Get LLM response and buffer it
+                            print(f"[{datetime.now().strftime('%H:%M:%S')}] 🤔 Thinking in {detected_lang.upper()}...", end=' ', flush=True)
+                            
+                            # Define language map for gTTS
+                            lang_map = {
+                                'hi': 'hi', 'ta': 'ta', 'te': 'te', 'ml': 'ml', 'bn': 'bn',
+                                'ar': 'ar', 'en': 'en', 'fr': 'fr', 'de': 'de', 'es': 'es', 'ko': 'ko', 'pl': 'pl'
+                            }
+                            gtts_lang = lang_map.get(detected_lang, detected_lang[:2])
 
-                        full_response = ""
-                        for sentence in llm.stream_sentences(text, detected_lang):
-                            if sentence and sentence.strip():
-                                print(".", end='', flush=True)
-                                full_response += sentence + " "
-                                # Stream text to UI immediately
-                                await websocket.send_json({"type": "text", "text": sentence + " "})
+                            full_response = ""
+                            for sentence in llm.stream_sentences(text, detected_lang):
+                                if sentence and sentence.strip():
+                                    print(".", end='', flush=True)
+                                    full_response += sentence + " "
+                                    # Stream text to UI immediately
+                                    await websocket.send_json({"type": "text", "text": sentence + " "})
 
-                                # GENERATE AND SEND AUDIO FOR THIS SENTENCE IMMEDIATELY
-                                try:
-                                    tts_obj = gTTS(text=sentence.strip(), lang=gtts_lang)
-                                    mp3_fp = io.BytesIO()
-                                    tts_obj.write_to_fp(mp3_fp)
-                                    mp3_fp.seek(0)
-                                    
-                                    audio_b64 = base64.b64encode(mp3_fp.read()).decode('utf-8')
-                                    await websocket.send_json({
-                                        "type": "audio", 
-                                        "data": audio_b64,
-                                        "mimeType": "audio/mpeg"
-                                    })
-                                except Exception as tts_err:
-                                    print(f"⚠️ Sentence TTS Error: {tts_err}")
-                        
-                        print(f"\n🤖 Bot [{detected_lang.upper()}]: {full_response.strip()}")
-                        print(f"✅ Full response sent to frontend\n")
-                        audio_buffer = [] 
-                        
-                    elif len(audio_buffer) > 100: # Max ~25 seconds of no transcription
-                        # Slide window
-                        audio_buffer = audio_buffer[20:] 
+                                    # GENERATE AND SEND AUDIO FOR THIS SENTENCE IMMEDIATELY
+                                    try:
+                                        tts_obj = gTTS(text=sentence.strip(), lang=gtts_lang)
+                                        mp3_fp = io.BytesIO()
+                                        tts_obj.write_to_fp(mp3_fp)
+                                        mp3_fp.seek(0)
+                                        
+                                        audio_b64 = base64.b64encode(mp3_fp.read()).decode('utf-8')
+                                        await websocket.send_json({
+                                            "type": "audio", 
+                                            "data": audio_b64,
+                                            "mimeType": "audio/mpeg"
+                                        })
+                                    except Exception as tts_err:
+                                        print(f"⚠️ Sentence TTS Error: {tts_err}")
+                            
+                            print(f"\n[{datetime.now().strftime('%H:%M:%S')}] 🤖 Bot [{detected_lang.upper()}]: {full_response.strip()}")
+                            print(f"✅ Full response sent to frontend\n")
+                        except Exception as inner_e:
+                            print(f"\n❌ Error during processing: {inner_e}")
+                        finally:
+                            # CRITICAL: Always resume listening regardless of success/fail
+                            is_listening = True
+                            audio_buffer = [] 
                         
                     elif len(audio_buffer) > 100: # Max ~25 seconds of no transcription
                         # Slide window
