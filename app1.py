@@ -29,7 +29,8 @@ app.add_middleware(
 # Initialize multi-lingual components
 print("\n📦 Loading Multi-lingual Models...")
 stt = STT(model_size='small') # Multi-lingual model
-llm = LLMClient(server_url="http://172.20.100.68:8000")
+llm_url = os.getenv("LLM_SERVER_URL", "http://localhost:8000")
+llm = LLMClient(server_url=llm_url)
 db = DatabaseManager()
 
 @app.websocket("/ws")

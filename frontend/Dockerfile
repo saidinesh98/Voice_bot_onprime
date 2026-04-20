@@ -1,27 +1,23 @@
-# Frontend Dockerfile for Aura AI
-# Multi-stage build: Build with Node, Serve with Nginx
+# Build stage
+FROM node:22 AS build
 
-# Stage 1: Build
-FROM node:20-alpine AS build
 WORKDIR /app
-COPY package*.json ./
-RUN npm install
-COPY . .
+
+# Step 1: Install dependencies using ONLY the package.json
+# We ignore the local lockfile and force a fresh resolution
+COPY package.json ./
+RUN npm install && npm install @tailwindcss/oxide
+
+# Step 2: Granularly copy only the source and config files
+# This guarantees no local node_modules or locks are leaked into the container
+COPY src ./src
+COPY components.json index.html tsconfig.json vite.config.ts ./
+
+# Step 3: Build the project
 RUN npm run build
 
-# Stage 2: Serve
-FROM nginx:alpine
-# Copy the built files from Stage 1 to the Nginx public folder
+# Production stage
+FROM nginx:stable-alpine
 COPY --from=build /app/dist /usr/share/nginx/html
-# Custom Nginx config to handle SPA routing (optional but recommended)
-RUN echo 'server { \
-    listen 80; \
-    location / { \
-        root /usr/share/nginx/html; \
-        index index.html; \
-        try_files $uri $uri/ /index.html; \
-    } \
-}' > /etc/nginx/conf.d/default.conf
-
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

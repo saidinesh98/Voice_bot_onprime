@@ -1,71 +1,89 @@
 services:
-  # 1. Database Service
-  postgres:
+  db:
     image: postgres:15-alpine
-    container_name: aura-postgres
-    restart: always
+    container_name: voice-bot-db
+    environment:
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASS:-root}
+      POSTGRES_DB: ${DB_NAME:-postgres}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: postgres
-    volumes:
-      - aura-db-data:/var/lib/postgresql/data
 
-  # 2. Identity Service
   keycloak:
-    image: quay.io/keycloak/keycloak:26.5.4
-    container_name: aura-keycloak
-    restart: always
-    command: start-dev --spi-theme-static-max-age=-1 --spi-theme-cache-themes=false --spi-theme-cache-templates=false
-    ports:
-      - "8080:8080"
+    build:
+      context: .
+      dockerfile: keycloak.Dockerfile
+    container_name: voice-bot-keycloak
+    command: start-dev --import-realm
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
-      KC_HOSTNAME_STRICT: "false"
-      KC_HOSTNAME_STRICT_HTTPS: "false"
-      KC_HTTP_ENABLED: "true"
+      KC_HTTP_ENABLED: 'true'
+      KC_HOSTNAME_STRICT: 'false'
+      KC_HOSTNAME: localhost
     volumes:
-      - ./aura-ai-theme:/opt/keycloak/themes/aura-ai:ro
-
-  # 3. AI Backend
-  aura-backend:
-    build: .
-    container_name: aura-backend
-    restart: always
+      - ./realm-export.json:/opt/keycloak/data/import/realm.json:ro
     ports:
-      - "8001:8001"
+      - "8080:8080"
+    depends_on:
+      - db
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: voice-bot-ollama
+    volumes:
+      - ollama_data:/root/.ollama
+      - ./ollama_init.sh:/entrypoint.sh
+    entrypoint: ["/bin/bash", "/entrypoint.sh"]
+    ports:
+      - "11434:11434"
+
+  llm-server:
+    build:
+      context: .
+      dockerfile: llm_server.Dockerfile
+    container_name: voice-bot-llm-server
     environment:
-      - DB_HOST=postgres
-      - DB_NAME=postgres
-      - DB_USER=postgres
-      - DB_PASS=root
+      - OLLAMA_HOST=http://ollama:11434
+    ports:
+      - "8000:8000"
+    depends_on:
+      - ollama
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend.Dockerfile
+    container_name: voice-bot-backend
+    environment:
+      - DB_HOST=db
+      - DB_NAME=${DB_NAME:-postgres}
+      - DB_USER=${DB_USER:-postgres}
+      - DB_PASS=${DB_PASS:-root}
       - DB_PORT=5432
       - KEYCLOAK_URL=http://keycloak:8080
-      - LLM_SERVER_URL=http://aura-llm:8000/v1/chat/completions
+      - KEYCLOAK_REALM=${KEYCLOAK_REALM:-aura-ai}
+      - KEYCLOAK_CLIENT_ID=${KEYCLOAK_CLIENT_ID:-aura-client}
+      - LLM_SERVER_URL=http://llm-server:8000
+    ports:
+      - "8001:8001"
     depends_on:
-      - postgres
+      - db
       - keycloak
+      - llm-server
 
-  # 4. Frontend (Served by Nginx)
-  aura-frontend:
-    build: ./frontend
-    container_name: aura-frontend
-    restart: always
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: voice-bot-frontend
     ports:
       - "3000:80"
     depends_on:
-      - aura-backend
-
-  # 5. LLM Server (Existing Script)
-  aura-llm:
-    build: ./llm_server
-    container_name: aura-llm
-    restart: always
-    ports:
-      - "8000:8000"
+      - backend
 
 volumes:
-  aura-db-data:
+  postgres_data:
+  ollama_data:
