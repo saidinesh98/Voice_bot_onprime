@@ -22,4 +22,4 @@ COPY multi_lingual/ ./multi_lingual/
 EXPOSE 8000
 
 # Run the server
-CMD ["uvicorn", "multi_lingual.server:server", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "multi_lingual.server:app", "--host", "0.0.0.0", "--port", "8000"]

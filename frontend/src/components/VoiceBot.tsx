@@ -156,6 +156,7 @@ export default function VoiceBot() {
       console.log("🎤 Microphone started for local backend");
     } catch (err) {
       console.error("Connection failed:", err);
+      alert("Failed to start Voice Bot. Please ensure you have granted microphone permissions, and if accessing remotely, that you are using HTTPS or localhost.");
     } finally {
       setIsConnecting(false);
     }

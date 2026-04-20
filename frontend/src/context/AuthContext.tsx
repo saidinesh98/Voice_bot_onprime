@@ -30,7 +30,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     isInitialized.current = true;
 
     const kc = new Keycloak({
-      url: 'http://localhost:8080',
+      url: window.location.origin, // Tunnel URL / Nginx Gateway
       realm: 'aura-ai',
       clientId: 'aura-client',
     });

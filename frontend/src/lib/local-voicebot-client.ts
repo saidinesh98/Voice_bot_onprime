@@ -24,9 +24,11 @@ export class LocalVoiceBotClient {
     this.audioContext = config.audioContext || null;
     
     return new Promise<void>((resolve, reject) => {
+      const host = window.location.host;
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
       const url = config.token 
-        ? `ws://localhost:8001/ws?token=${config.token}`
-        : `ws://localhost:8001/ws`;
+        ? `${protocol}//${host}/ws?token=${config.token}`
+        : `${protocol}//${host}/ws`;
       this.ws = new WebSocket(url);
       
       this.ws.onopen = () => {

@@ -85,18 +85,25 @@ async def websocket_endpoint(websocket: WebSocket):
                 audio_chunk = message["bytes"]
                 # Convert Int16 PCM to float32 for Whisper
                 chunk_np = np.frombuffer(audio_chunk, dtype=np.int16).astype(np.float32) / 32768.0
+                
+                # DIAGNOSTIC: Log audio levels
+                if len(audio_buffer) % 20 == 0:
+                    avg_amp = np.abs(chunk_np).mean()
+                    print(f"🎤 Audio Chunk Received: size={len(audio_chunk)}, avg_amp={avg_amp:.6f}, buffer_len={len(audio_buffer)}")
+                
                 audio_buffer.append(chunk_np)
                 
-                # If we have enough audio (~1.2s), try to transcribe
-                if len(audio_buffer) >= 6: 
+                # If we have enough audio (~2.5s for initial detection), try to transcribe
+                if len(audio_buffer) >= 12: 
                     full_audio = np.concatenate(audio_buffer)
-                    
-                    # Log that we are attempting transcription
-                    if len(audio_buffer) % 10 == 0:
-                        print(f"📡 Receiving audio... (buffer: {len(audio_buffer)} chunks)", end='\r')
                     
                     # Transcribe with auto language detection
                     text, detected_lang = stt.transcribe(full_audio, detect_language=True)
+                    
+                    if text:
+                        print(f"✨ Transcribed ({detected_lang}): '{text}'")
+                    elif len(audio_buffer) % 12 == 0:
+                        print(f"⏳ No speech detected in {len(audio_buffer)} chunks...")
                     
                     if text and len(text.strip()) > 3:
                         print(f"\n📝 You [{detected_lang.upper()}]: {text}")
@@ -138,44 +145,45 @@ async def websocket_endpoint(websocket: WebSocket):
                         
                         # Get LLM response and buffer it
                         print(f"🤔 Thinking in {detected_lang.upper()}...", end=' ', flush=True)
+                        
+                        # Define language map for gTTS
+                        lang_map = {
+                            'hi': 'hi', 'ta': 'ta', 'te': 'te', 'ml': 'ml', 'bn': 'bn',
+                            'ar': 'ar', 'en': 'en', 'fr': 'fr', 'de': 'de', 'es': 'es', 'ko': 'ko', 'pl': 'pl'
+                        }
+                        gtts_lang = lang_map.get(detected_lang, detected_lang[:2])
+
                         full_response = ""
                         for sentence in llm.stream_sentences(text, detected_lang):
                             if sentence and sentence.strip():
                                 print(".", end='', flush=True)
                                 full_response += sentence + " "
-                                # Stream text to UI
+                                # Stream text to UI immediately
                                 await websocket.send_json({"type": "text", "text": sentence + " "})
+
+                                # GENERATE AND SEND AUDIO FOR THIS SENTENCE IMMEDIATELY
+                                try:
+                                    tts_obj = gTTS(text=sentence.strip(), lang=gtts_lang)
+                                    mp3_fp = io.BytesIO()
+                                    tts_obj.write_to_fp(mp3_fp)
+                                    mp3_fp.seek(0)
+                                    
+                                    audio_b64 = base64.b64encode(mp3_fp.read()).decode('utf-8')
+                                    await websocket.send_json({
+                                        "type": "audio", 
+                                        "data": audio_b64,
+                                        "mimeType": "audio/mpeg"
+                                    })
+                                except Exception as tts_err:
+                                    print(f"⚠️ Sentence TTS Error: {tts_err}")
                         
                         print(f"\n🤖 Bot [{detected_lang.upper()}]: {full_response.strip()}")
-                        
-                        # Generate TTS for the WHOLE response at once
-                        if full_response.strip():
-                            print(f"🔊 Generating speech in {detected_lang.upper()}...")
-                            try:
-                                # Map language codes for gTTS
-                                lang_map = {
-                                    'hi': 'hi', 'ta': 'ta', 'te': 'te', 'ml': 'ml', 'bn': 'bn',
-                                    'ar': 'ar', 'en': 'en', 'fr': 'fr', 'de': 'de', 'es': 'es'
-                                }
-                                gtts_lang = lang_map.get(detected_lang, detected_lang[:2])
-                                
-                                tts_obj = gTTS(text=full_response.strip(), lang=gtts_lang)
-                                mp3_fp = io.BytesIO()
-                                tts_obj.write_to_fp(mp3_fp)
-                                mp3_fp.seek(0)
-                                
-                                audio_b64 = base64.b64encode(mp3_fp.read()).decode('utf-8')
-                                await websocket.send_json({
-                                    "type": "audio", 
-                                    "data": audio_b64,
-                                    "mimeType": "audio/mpeg"
-                                })
-                                print(f"✅ Speech sent to frontend\n")
-                            except Exception as tts_err:
-                                print(f"\n⚠️  TTS Error: {tts_err}")
-                        
-                        print(f"🔊 Speaking response...\n")
+                        print(f"✅ Full response sent to frontend\n")
                         audio_buffer = [] 
+                        
+                    elif len(audio_buffer) > 100: # Max ~25 seconds of no transcription
+                        # Slide window
+                        audio_buffer = audio_buffer[20:] 
                         
                     elif len(audio_buffer) > 100: # Max ~25 seconds of no transcription
                         # Slide window

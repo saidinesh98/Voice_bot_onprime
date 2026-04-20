@@ -18,11 +18,14 @@ services:
     container_name: voice-bot-keycloak
     command: start-dev --import-realm
     environment:
-      KC_BOOTSTRAP_ADMIN_USERNAME: admin
-      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
       KC_HTTP_ENABLED: 'true'
       KC_HOSTNAME_STRICT: 'false'
-      KC_HOSTNAME: localhost
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://db:5432/${DB_NAME:-postgres}
+      KC_DB_USERNAME: ${DB_USER:-postgres}
+      KC_DB_PASSWORD: ${DB_PASS:-root}
     volumes:
       - ./realm-export.json:/opt/keycloak/data/import/realm.json:ro
     ports:
@@ -83,6 +86,13 @@ services:
       - "3000:80"
     depends_on:
       - backend
+
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: voice-bot-tunnel
+    command: tunnel --url http://frontend:80
+    depends_on:
+      - frontend
 
 volumes:
   postgres_data:

@@ -3,10 +3,6 @@
   "realm": "aura-ai",
   "enabled": true,
   "displayName": "Aura AI Voice Bot",
-  "loginTheme": "aura-ai-theme",
-  "accountTheme": "aura-ai-theme",
-  "adminConsoleTheme": "aura-ai-theme",
-  "emailTheme": "aura-ai-theme",
   "clients": [
     {
       "clientId": "aura-client",
