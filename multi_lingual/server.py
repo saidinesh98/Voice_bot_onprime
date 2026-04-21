@@ -31,18 +31,34 @@ GLOBAL_INSTRUCTION = """# ROLE: Senior Property Consultant @ SAMANA Developers
 You are a high-end, charismatic, and knowledgeable human sales consultant. 
 You don't "process" requests—you have conversations. 
 
-- Keep responses short and concise (1-3 sentences maximum).
-- Always use AED for pricing (Never say "Dollars").
-- Use a friendly, professional tone."""
+- You are proactive. Never just answer a question—always follow up with a high-value discovery question to qualify the lead.
+- Focus on "Selling the Dream": Use evocative words like "exclusive," "high-yield," "waterfront luxury," and "prime location."
+- Keep responses concise but impactful: 2-3 sentences is the sweet spot. 
+- Goal: You want to know if they are an **Investor (ROI)** or an **End-User (Lifestyle)**, and their **Budget**.
+
+# KNOWLEDGE BASE - SAMANA PROJECTS (Use these as "Teasers"):
+- SAMANA Hills South 2: Arjan, AED 570k. Key Teaser: Private pools in every unit!
+- SAMANA Barari Heights: Majan, AED 970k. Key Teaser: Nature-inspired & ultra-luxury.
+- SAMANA Palm Vista: Dubai Islands, AED 670k. Key Teaser: Perfect waterfront luxury.
+- SAMANA Creek Horizon: Dubai Creek, AED 370k. Key Teaser: Highest yield for investors.
+- SAMANA Sky Views: Arjan, AED 680k. Key Teaser: Stunning architecture & sky pools.
+
+# DISCOVERY STRATEGY:
+1. If they ask for "Properties", mention 1-2 projects and ask if they prefer "ROI potential" or "Living in luxury".
+2. If they ask about "Prices", provide the range and ask what their "Ideal budget" is for a Dubai investment.
+3. If they ask about "Location", explain the benefits of Arjan or Dubai Islands and ask if they prefer "Beachfront" or "City Hub".
+"""
 # ----------------------------------
 
 LANGUAGE_PROMPTS = {
     'en': """You are a helpful, conversational voice assistant. 
 Keep responses:
-- Short and punchy (1-3 sentences maximum)
+- Extremely short by default (1-2 sentences maximum)
+- ONLY expand to 3+ sentences if the user asks for "details", "more info", or "explain"
 - Natural for spoken conversation
 - Friendly and engaging
-- Answer directly without preamble""",
+- Answer directly without preamble
+""",
 
     'hi': """आप एक सहायक आवाज सहायक हैं।
 अपने उत्तर छोटे और संक्षिप्त रखें (अधिकतम 1-3 वाक्य)।
@@ -113,7 +129,7 @@ class ChatRequest(BaseModel):
     text: str
     session_id: str = "default"
     language: str = "en"
-    model: str = "llama3.2:3b"  # Use fast model
+    model: str = "llama3.2:1b"  # Use ultra-fast 1b model for voice response
     temperature: float = 0.3
 
 class ClearRequest(BaseModel):
@@ -161,14 +177,17 @@ def chat(request: ChatRequest):
         )
         system_prompt = f"{GLOBAL_INSTRUCTION}\n\n{lang_prompt}"
         
-        # Create session key (includes language for separate histories)
-        session_key = f"{request.session_id}_{request.language}"
+        # Session key (Just the session ID, NO language suffix)
+        session_key = str(request.session_id)
         
-        # Initialize conversation history
+        # Initialize or UPDATE system prompt (ensures language change is reflected)
         if session_key not in conversations:
             conversations[session_key] = [
                 {"role": "system", "content": system_prompt}
             ]
+        else:
+            # Refresh the system prompt to the latest language instructions
+            conversations[session_key][0] = {"role": "system", "content": system_prompt}
         
         # Add user message
         conversations[session_key].append(
@@ -181,7 +200,7 @@ def chat(request: ChatRequest):
             messages=conversations[session_key],
             options={
                 "temperature": request.temperature,
-                "num_predict": 100
+                "num_predict": 150
             }
         )
         
@@ -221,13 +240,16 @@ async def chat_stream(request: ChatRequest):
             system_prompt = f"{GLOBAL_INSTRUCTION}\n\n{lang_prompt}"
             
             # Session key
-            session_key = f"{request.session_id}_{request.language}"
+            session_key = str(request.session_id)
             
-            # Initialize history
+            # Initialize or UPDATE history
             if session_key not in conversations:
                 conversations[session_key] = [
                     {"role": "system", "content": system_prompt}
                 ]
+            else:
+                # Refresh the system prompt to the latest language instructions
+                conversations[session_key][0] = {"role": "system", "content": system_prompt}
             
             # Add user message
             conversations[session_key].append(
@@ -241,7 +263,7 @@ async def chat_stream(request: ChatRequest):
                 stream=True,
                 options={
                     "temperature": request.temperature,
-                    "num_predict": 100
+                    "num_predict": 150
                 }
             )
             
@@ -273,15 +295,12 @@ async def chat_stream(request: ChatRequest):
 @app.post("/clear")
 def clear_history(request: ClearRequest):
     """Clear conversation history"""
-    if request.language:
-        session_key = f"{request.session_id}_{request.language}"
-        if session_key in conversations:
-            lang_prompt = LANGUAGE_PROMPTS.get(request.language, LANGUAGE_PROMPTS['en'])
-            system_prompt = f"{GLOBAL_INSTRUCTION}\n\n{lang_prompt}"
-            conversations[session_key] = [
-                {"role": "system", "content": system_prompt}
-            ]
-            return {"status": "cleared", "session": session_key}
+    session_key = str(request.session_id)
+    if session_key in conversations:
+        # We can't easily reset to a 'neutral' prompt if history is shared,
+        # but we can clear the whole history for any language.
+        del conversations[session_key]
+        return {"status": "cleared", "session": session_key}
     else:
         # Clear all sessions for this session_id
         keys_to_delete = [k for k in conversations if k.startswith(request.session_id)]

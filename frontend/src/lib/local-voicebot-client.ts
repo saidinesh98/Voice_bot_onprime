@@ -41,6 +41,18 @@ export class LocalVoiceBotClient {
 
       this.ws.onmessage = async (event) => {
         try {
+          if (event.data instanceof Blob) {
+            // Binary audio message (WAV from MeloTTS/MMS)
+            if (callbacks.onAudio) {
+              const arrayBuffer = await event.data.arrayBuffer();
+              const audioBuffer = await this.audioContext?.decodeAudioData(arrayBuffer);
+              if (audioBuffer) {
+                callbacks.onAudio(audioBuffer.getChannelData(0));
+              }
+            }
+            return;
+          }
+
           const data = JSON.parse(event.data);
           
           if (data.type === 'text' && callbacks.onMessage) {
@@ -52,18 +64,17 @@ export class LocalVoiceBotClient {
           }
 
           if (data.type === 'audio' && callbacks.onAudio) {
+            // Fallback for legacy base64 audio
             const binaryString = atob(data.data);
             const bytes = new Uint8Array(binaryString.length);
             for (let i = 0; i < binaryString.length; i++) {
               bytes[i] = binaryString.charCodeAt(i);
             }
             
-            // Decode MP3 to PCM using shared context
-            if (!this.audioContext) {
-                this.audioContext = new AudioContext({ sampleRate: 24000 });
+            const audioBuffer = await this.audioContext?.decodeAudioData(bytes.buffer);
+            if (audioBuffer) {
+                callbacks.onAudio(audioBuffer.getChannelData(0));
             }
-            const audioBuffer = await this.audioContext.decodeAudioData(bytes.buffer);
-            callbacks.onAudio(audioBuffer.getChannelData(0));
           }
         } catch (e) {
           console.error("Error processing message:", e);

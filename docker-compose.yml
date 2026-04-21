@@ -52,6 +52,8 @@ services:
       - OLLAMA_HOST=http://ollama:11434
     ports:
       - "8000:8000"
+    volumes:
+      - .:/app
     depends_on:
       - ollama
 
@@ -72,6 +74,8 @@ services:
       - LLM_SERVER_URL=http://llm-server:8000
     ports:
       - "8001:8001"
+    volumes:
+      - .:/app
     depends_on:
       - db
       - keycloak

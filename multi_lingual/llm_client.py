@@ -18,7 +18,13 @@ class LLMClient:
         'de': "Sie sind ein Assistent. Antworten Sie auf Deutsch.",
         'es': "Eres un asistente. Responde en español.",
         'zh': "你是一个助手。用中文回答。",
-        'ja': "あなたはアシスタントです。日本語で答えてください。"
+        'ja': "あなたはアシスタントです。日本語で答えてください。",
+        'kn': "ನೀವು ಒಬ್ಬ ಸಹಾಯಕ. ಕನ್ನಡದಲ್ಲಿ ಉತ್ತರಿಸಿ.",
+        'mr': "तुम्ही एक मदतनीस आहात. मराठीत उत्तर द्या.",
+        'gu': "તમે એક મદદગાર છો. ગુજરાતીમાં જવાબ આપો.",
+        'pa': "ਤੁਸੀਂ ਇੱਕ ਸਹਾਇਕ ਹੋ। ਪੰਜਾਬੀ ਵਿੱਚ ਜਵਾਬ ਦਿਓ।",
+        'ur': "آپ ایک مددگار ہیں۔ اردو میں جواب دیں۔",
+        'ru': "Вы помощник. Отвечайте на русском."
     }
     
     def __init__(self, server_url="http://172.20.100.68:8000"):
@@ -82,10 +88,24 @@ class LLMClient:
                             full_response += token
                             
                             # Split into sentences (works for multiple languages)
-                            sentences = re.split(r'(?<=[.!?।॥])\s+', buffer)
+                            # Split by punctuation but ALSO by max length and special markers
+                            # This ensures we don't wait for a 50-word sentence to finish
+                            sentences = re.split(r'(?<=[.!?।॥,])\s+', buffer)
+                            
                             for sentence in sentences[:-1]:
-                                if sentence.strip():
-                                    yield sentence.strip()
+                                s = sentence.strip()
+                                # Allow much longer sentences (up to 150 chars) for smoother speech
+                                while len(s) > 150:
+                                    # Try to find a space or comma near 130 characters
+                                    cut_idx = s.rfind(' ', 0, 150)
+                                    if cut_idx == -1: cut_idx = s.rfind(',', 0, 150)
+                                    if cut_idx == -1: cut_idx = 130 # Fallback
+                                    
+                                    chunk = s[:cut_idx].strip()
+                                    if chunk: yield chunk
+                                    s = s[cut_idx:].strip()
+                                
+                                if s: yield s
                             buffer = sentences[-1] if sentences else ""
                     except:
                         continue

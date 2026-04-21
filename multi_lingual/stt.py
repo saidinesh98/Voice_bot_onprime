@@ -28,7 +28,7 @@ class STT:
         'ar': 'Arabic'
     }
     
-    def __init__(self, model_size='small'):  # Use 'small' for multi-lingual (not 'small.en')
+    def __init__(self, model_size='base'):  # Upgraded from 'tiny' to 'base' for much better multi-lingual detection
         print(f"Loading multi-lingual STT model ({model_size})...")
         # Use multi-lingual model (supports 100+ languages)
         self.model = WhisperModel(
@@ -49,20 +49,28 @@ class STT:
             return "", self.current_language
         
         # Transcribe
+        # bias towards English if it's currently English or if detection is weak
         segments, info = self.model.transcribe(
             audio_np,
-            beam_size=3,
-            # If we've already detected a language reliably, use it as a boost
+            beam_size=1,
             language=None if detect_language else self.current_language,
+            initial_prompt="Hello, this is English.", # Subtle hint to prefer English sounds
             vad_filter=True,
             vad_parameters=dict(
-                min_silence_duration_ms=500,
+                min_silence_duration_ms=250,
                 threshold=0.5
             )
         )
         
-        # Language Consensus Logic
+        # Language Consensus Logic 
         detected_lang = info.language if hasattr(info, 'language') else 'en'
+        lang_prob = info.language_probability if hasattr(info, 'language_probability') else 1.0
+
+        # English First Bias: If English is at least 30% likely, stay with English
+        # or if the non-English language has low confidence
+        if detected_lang != 'en' and lang_prob < 0.8:
+            print(f"👂 Ignoring weak detection of {detected_lang} ({lang_prob:.2f}), defaulting to English")
+            detected_lang = 'en'
         
         if detect_language:
             self.lang_history.append(detected_lang)
@@ -74,7 +82,7 @@ class STT:
             counts = Counter(self.lang_history)
             most_common, freq = counts.most_common(1)[0]
             
-            if freq >= 3:
+            if freq >= 2 or (most_common != 'en' and freq >= 1):
                 self.current_language = most_common
         
         # Combine all segments

@@ -10,8 +10,8 @@ while ! ollama list > /dev/null 2>&1; do
 done
 
 # Pull the requested model
-echo "📥 Pulling model: llama3.2:3b"
-ollama pull llama3.2:3b
+echo "📥 Pulling model: llama3.2:1b"
+ollama pull llama3.2:1b
 
 echo "✅ Model ready. Keeping process alive..."
 # Wait for the background process

@@ -57,3 +57,12 @@ Thumbs.db
 .idea/
 *.swp
 *.bak
+
+# Multi-lingual Voice Bot Specific
+multi_lingual/*.jit
+multi_lingual/*.pt
+MeloTTS/melo/ckpt/
+MeloTTS/models/
+*.wav
+*.mp3
+*.pcm
