@@ -21,6 +21,7 @@ services:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
       KC_HTTP_ENABLED: 'true'
+      KC_PROXY: edge
       KC_HOSTNAME_STRICT: 'false'
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://db:5432/${DB_NAME:-postgres}

@@ -14,7 +14,8 @@ class TTSLocal:
     
     def __init__(self, device='cpu'):
         # Optimize torch for CPU
-        torch.set_num_threads(4)
+        # Optimize torch for 32-core environment
+        torch.set_num_threads(16)
         self.device = device
         self.melo_models = {}  # Cache for MeloTTS models
         self.mms_models = {}   # Cache for MMS models
@@ -22,12 +23,7 @@ class TTSLocal:
         
         # Languages supported by MeloTTS
         self.MELO_LANGS = {
-            'en': 'EN',
-            'es': 'ES',
-            'fr': 'FR',
-            'zh': 'ZH',
-            'jp': 'JP',
-            'kr': 'KR'
+            'en': 'EN'
         }
         
         # Languages supported by MMS (HuggingFace model paths)
@@ -35,18 +31,17 @@ class TTSLocal:
             'hi': 'facebook/mms-tts-hin',
             'ta': 'facebook/mms-tts-tam',
             'te': 'facebook/mms-tts-tel',
-            'ml': 'facebook/mms-tts-mal',
-            'bn': 'facebook/mms-tts-ben',
             'ar': 'facebook/mms-tts-ara',
-            'id': 'facebook/mms-tts-ind',
-            'ko': 'facebook/mms-tts-kor'
+            'de': 'facebook/mms-tts-deu',
         }
         
         print(f"✅ TTSLocal initialized on {device}")
         # Warmup English model immediately
         try:
-            self._get_melo_model('EN')
-            print("🔥 TTS engine warmed up!")
+            print("🔥 Warming up TTS engines (pre-loading BERT and VITS models)...", flush=True)
+            # Perform a tiny dummy synthesis to force-load BERT into RAM
+            self.generate_wav("Warmup", lang='en')
+            print("✅ TTS engines fully warmed up and cached in RAM!")
         except Exception as e:
             print(f"⚠️ TTS Warmup failed: {e}")
 

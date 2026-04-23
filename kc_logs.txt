@@ -1,0 +1,500 @@
+voice-bot-keycloak  | Caused by: freemarker.template.TemplateNotFoundException: Template not found for name "error.ftl".
+voice-bot-keycloak  | The name was interpreted by this TemplateLoader: org.keycloak.theme.freemarker.DefaultFreeMarkerProvider$ThemeTemplateLoader@25e1d814.
+voice-bot-keycloak  | 	at freemarker.template.Configuration.getTemplate(Configuration.java:2957)
+voice-bot-keycloak  | 	at freemarker.template.Configuration.getTemplate(Configuration.java:2777)
+voice-bot-keycloak  | 	at org.keycloak.theme.freemarker.DefaultFreeMarkerProvider.getTemplate(DefaultFreeMarkerProvider.java:66)
+voice-bot-keycloak  | 	at org.keycloak.theme.freemarker.DefaultFreeMarkerProvider.processTemplate(DefaultFreeMarkerProvider.java:45)
+voice-bot-keycloak  | 	... 14 more
+voice-bot-keycloak  | 
+voice-bot-keycloak  | 2026-04-22 06:38:17,965 ERROR [org.keycloak.headers.DefaultSecurityHeadersProvider] (executor-thread-3) MediaType not set on path /realms/aura-ai/protocol/openid-connect/auth, with response status 500
+voice-bot-keycloak  | 2026-04-22 06:38:17,967 ERROR [io.quarkus.vertx.http.runtime.QuarkusErrorHandler] (executor-thread-3) HTTP Request to /realms/aura-ai/protocol/openid-connect/auth?client_id=aura-client&redirect_uri=https%3A%2F%2Ficq-merry-really-dropped.trycloudflare.com%2F&state=b6bfa85e-15fa-4734-90a3-4bdb9e2bd232&response_mode=fragment&response_type=code&scope=openid&nonce=a6563532-34e7-4611-8b77-337f50ef7f98&code_challenge=YeBlWRbpBGV8MatcoAZ-KEDSL4Od2Xnmx4YN4oMFzbA&code_challenge_method=S256 failed, error id: 15fd9eec-fd18-4d96-ac5c-34ccc345e640-2: jakarta.ws.rs.InternalServerErrorException: HTTP 500 Internal Server Error
+voice-bot-keycloak  | 	at org.keycloak.headers.DefaultSecurityHeadersProvider.addHeaders(DefaultSecurityHeadersProvider.java:75)
+voice-bot-keycloak  | 	at org.keycloak.services.filters.KeycloakSecurityHeadersFilter.filter(KeycloakSecurityHeadersFilter.java:43)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.server.handlers.ResourceResponseFilterHandler.handle(ResourceResponseFilterHandler.java:25)
+voice-bot-keycloak  | 	at io.quarkus.resteasy.reactive.server.runtime.QuarkusResteasyReactiveRequestContext.invokeHandler(QuarkusResteasyReactiveRequestContext.java:150)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.common.core.AbstractResteasyReactiveContext.run(AbstractResteasyReactiveContext.java:147)
+voice-bot-keycloak  | 	at io.quarkus.vertx.core.runtime.VertxCoreRecorder$14.runWith(VertxCoreRecorder.java:582)
+voice-bot-keycloak  | 	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2513)
+voice-bot-keycloak  | 	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1538)
+voice-bot-keycloak  | 	at org.jboss.threads.DelegatingRunnable.run(DelegatingRunnable.java:29)
+voice-bot-keycloak  | 	at org.jboss.threads.ThreadLocalResettingRunnable.run(ThreadLocalResettingRunnable.java:29)
+voice-bot-keycloak  | 	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+voice-bot-keycloak  | 	at java.base/java.lang.Thread.run(Thread.java:840)
+voice-bot-keycloak  | 
+voice-bot-keycloak  | 2026-04-22 06:38:19,934 SEVERE [freemarker.runtime] (executor-thread-3) Error executing FreeMarker template: freemarker.core._MiscTemplateException: Template importing failed (for parameter value "template.ftl"):
+voice-bot-keycloak  | Template not found for name "template.ftl".
+voice-bot-keycloak  | The name was interpreted by this TemplateLoader: org.keycloak.theme.freemarker.DefaultFreeMarkerProvider$ThemeTemplateLoader@37467011.
+voice-bot-keycloak  | 
+voice-bot-keycloak  | ----
+voice-bot-keycloak  | FTL stack trace ("~" means nesting-related):
+voice-bot-keycloak  | 	- Failed at: #import "template.ftl" as layout  [in template "login.ftl" at line 1, column 1]
+voice-bot-keycloak  | ----
+voice-bot-keycloak  | 	at freemarker.core.LibraryLoad.accept(LibraryLoad.java:67)
+voice-bot-keycloak  | 	at freemarker.core.Environment.visit(Environment.java:335)
+voice-bot-keycloak  | 	at freemarker.core.Environment.visit(Environment.java:341)
+voice-bot-keycloak  | 	at freemarker.core.Environment.process(Environment.java:314)
+voice-bot-keycloak  | 	at freemarker.template.Template.process(Template.java:383)
+voice-bot-keycloak  | 	at org.keycloak.theme.freemarker.DefaultFreeMarkerProvider.processTemplate(DefaultFreeMarkerProvider.java:49)
+voice-bot-keycloak  | 	at org.keycloak.forms.login.freemarker.FreeMarkerLoginFormsProvider.processTemplate(FreeMarkerLoginFormsProvider.java:544)
+voice-bot-keycloak  | 	at org.keycloak.forms.login.freemarker.FreeMarkerLoginFormsProvider.createResponse(FreeMarkerLoginFormsProvider.java:316)
+voice-bot-keycloak  | 	at org.keycloak.forms.login.freemarker.FreeMarkerLoginFormsProvider.createLoginUsernamePassword(FreeMarkerLoginFormsProvider.java:558)
+voice-bot-keycloak  | 	at org.keycloak.authentication.authenticators.browser.UsernamePasswordForm.challenge(UsernamePasswordForm.java:95)
+voice-bot-keycloak  | 	at org.keycloak.authentication.authenticators.browser.UsernamePasswordForm.authenticate(UsernamePasswordForm.java:81)
+voice-bot-keycloak  | 	at org.keycloak.authentication.DefaultAuthenticationFlow.processSingleFlowExecutionModel(DefaultAuthenticationFlow.java:442)
+voice-bot-keycloak  | 	at org.keycloak.authentication.DefaultAuthenticationFlow.processFlow(DefaultAuthenticationFlow.java:246)
+voice-bot-keycloak  | 	at org.keycloak.authentication.DefaultAuthenticationFlow.processSingleFlowExecutionModel(DefaultAuthenticationFlow.java:377)
+voice-bot-keycloak  | 	at org.keycloak.authentication.DefaultAuthenticationFlow.processFlow(DefaultAuthenticationFlow.java:268)
+voice-bot-keycloak  | 	at org.keycloak.authentication.AuthenticationProcessor.authenticateOnly(AuthenticationProcessor.java:1027)
+voice-bot-keycloak  | 	at org.keycloak.authentication.AuthenticationProcessor.authenticate(AuthenticationProcessor.java:884)
+voice-bot-keycloak  | 	at org.keycloak.protocol.AuthorizationEndpointBase.handleBrowserAuthenticationRequest(AuthorizationEndpointBase.java:152)
+voice-bot-keycloak  | 	at org.keycloak.protocol.oidc.endpoints.AuthorizationEndpoint.buildAuthorizationCodeAuthorizationResponse(AuthorizationEndpoint.java:337)
+voice-bot-keycloak  | 	at org.keycloak.protocol.oidc.endpoints.AuthorizationEndpoint.process(AuthorizationEndpoint.java:202)
+voice-bot-keycloak  | 	at org.keycloak.protocol.oidc.endpoints.AuthorizationEndpoint.buildGet(AuthorizationEndpoint.java:113)
+voice-bot-keycloak  | 	at org.keycloak.protocol.oidc.endpoints.AuthorizationEndpoint$quarkusrestinvoker$buildGet_4b690b27439f19dd29733dc5fd4004f24de0adb6.invoke(Unknown Source)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.server.handlers.InvocationHandler.handle(InvocationHandler.java:29)
+voice-bot-keycloak  | 	at io.quarkus.resteasy.reactive.server.runtime.QuarkusResteasyReactiveRequestContext.invokeHandler(QuarkusResteasyReactiveRequestContext.java:141)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.common.core.AbstractResteasyReactiveContext.run(AbstractResteasyReactiveContext.java:147)
+voice-bot-keycloak  | 	at io.quarkus.vertx.core.runtime.VertxCoreRecorder$14.runWith(VertxCoreRecorder.java:582)
+voice-bot-keycloak  | 	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2513)
+voice-bot-keycloak  | 	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1538)
+voice-bot-keycloak  | 	at org.jboss.threads.DelegatingRunnable.run(DelegatingRunnable.java:29)
+voice-bot-keycloak  | 	at org.jboss.threads.ThreadLocalResettingRunnable.run(ThreadLocalResettingRunnable.java:29)
+voice-bot-keycloak  | 	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+voice-bot-keycloak  | 	at java.base/java.lang.Thread.run(Thread.java:840)
+voice-bot-keycloak  | Caused by: freemarker.template.TemplateNotFoundException: Template not found for name "template.ftl".
+voice-bot-keycloak  | The name was interpreted by this TemplateLoader: org.keycloak.theme.freemarker.DefaultFreeMarkerProvider$ThemeTemplateLoader@37467011.
+voice-bot-keycloak  | 	at freemarker.template.Configuration.getTemplate(Configuration.java:2957)
+voice-bot-keycloak  | 	at freemarker.core.Environment.getTemplateForInclusion(Environment.java:3062)
+voice-bot-keycloak  | 	at freemarker.core.Environment.getTemplateForInclusion(Environment.java:3024)
+voice-bot-keycloak  | 	at freemarker.core.Environment.getTemplateForImporting(Environment.java:3186)
+voice-bot-keycloak  | 	at freemarker.core.Environment.importLib(Environment.java:3171)
+voice-bot-keycloak  | 	at freemarker.core.Environment.importLib(Environment.java:3135)
+voice-bot-keycloak  | 	at freemarker.core.LibraryLoad.accept(LibraryLoad.java:65)
+voice-bot-keycloak  | 	... 31 more
+voice-bot-keycloak  | 
+voice-bot-keycloak  | 2026-04-22 06:38:19,935 ERROR [org.keycloak.forms.login.freemarker.FreeMarkerLoginFormsProvider] (executor-thread-3) Failed to process template: org.keycloak.theme.FreeMarkerException: Failed to process template login.ftl
+voice-bot-keycloak  | 	at org.keycloak.theme.freemarker.DefaultFreeMarkerProvider.processTemplate(DefaultFreeMarkerProvider.java:52)
+voice-bot-keycloak  | 	at org.keycloak.forms.login.freemarker.FreeMarkerLoginFormsProvider.processTemplate(FreeMarkerLoginFormsProvider.java:544)
+voice-bot-keycloak  | 	at org.keycloak.forms.login.freemarker.FreeMarkerLoginFormsProvider.createResponse(FreeMarkerLoginFormsProvider.java:316)
+voice-bot-keycloak  | 	at org.keycloak.forms.login.freemarker.FreeMarkerLoginFormsProvider.createLoginUsernamePassword(FreeMarkerLoginFormsProvider.java:558)
+voice-bot-keycloak  | 	at org.keycloak.authentication.authenticators.browser.UsernamePasswordForm.challenge(UsernamePasswordForm.java:95)
+voice-bot-keycloak  | 	at org.keycloak.authentication.authenticators.browser.UsernamePasswordForm.authenticate(UsernamePasswordForm.java:81)
+voice-bot-keycloak  | 	at org.keycloak.authentication.DefaultAuthenticationFlow.processSingleFlowExecutionModel(DefaultAuthenticationFlow.java:442)
+voice-bot-keycloak  | 	at org.keycloak.authentication.DefaultAuthenticationFlow.processFlow(DefaultAuthenticationFlow.java:246)
+voice-bot-keycloak  | 	at org.keycloak.authentication.DefaultAuthenticationFlow.processSingleFlowExecutionModel(DefaultAuthenticationFlow.java:377)
+voice-bot-keycloak  | 	at org.keycloak.authentication.DefaultAuthenticationFlow.processFlow(DefaultAuthenticationFlow.java:268)
+voice-bot-keycloak  | 	at org.keycloak.authentication.AuthenticationProcessor.authenticateOnly(AuthenticationProcessor.java:1027)
+voice-bot-keycloak  | 	at org.keycloak.authentication.AuthenticationProcessor.authenticate(AuthenticationProcessor.java:884)
+voice-bot-keycloak  | 	at org.keycloak.protocol.AuthorizationEndpointBase.handleBrowserAuthenticationRequest(AuthorizationEndpointBase.java:152)
+voice-bot-keycloak  | 	at org.keycloak.protocol.oidc.endpoints.AuthorizationEndpoint.buildAuthorizationCodeAuthorizationResponse(AuthorizationEndpoint.java:337)
+voice-bot-keycloak  | 	at org.keycloak.protocol.oidc.endpoints.AuthorizationEndpoint.process(AuthorizationEndpoint.java:202)
+voice-bot-keycloak  | 	at org.keycloak.protocol.oidc.endpoints.AuthorizationEndpoint.buildGet(AuthorizationEndpoint.java:113)
+voice-bot-keycloak  | 	at org.keycloak.protocol.oidc.endpoints.AuthorizationEndpoint$quarkusrestinvoker$buildGet_4b690b27439f19dd29733dc5fd4004f24de0adb6.invoke(Unknown Source)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.server.handlers.InvocationHandler.handle(InvocationHandler.java:29)
+voice-bot-keycloak  | 	at io.quarkus.resteasy.reactive.server.runtime.QuarkusResteasyReactiveRequestContext.invokeHandler(QuarkusResteasyReactiveRequestContext.java:141)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.common.core.AbstractResteasyReactiveContext.run(AbstractResteasyReactiveContext.java:147)
+voice-bot-keycloak  | 	at io.quarkus.vertx.core.runtime.VertxCoreRecorder$14.runWith(VertxCoreRecorder.java:582)
+voice-bot-keycloak  | 	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2513)
+voice-bot-keycloak  | 	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1538)
+voice-bot-keycloak  | 	at org.jboss.threads.DelegatingRunnable.run(DelegatingRunnable.java:29)
+voice-bot-keycloak  | 	at org.jboss.threads.ThreadLocalResettingRunnable.run(ThreadLocalResettingRunnable.java:29)
+voice-bot-keycloak  | 	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+voice-bot-keycloak  | 	at java.base/java.lang.Thread.run(Thread.java:840)
+voice-bot-keycloak  | Caused by: freemarker.core._MiscTemplateException: Template importing failed (for parameter value "template.ftl"):
+voice-bot-keycloak  | Template not found for name "template.ftl".
+voice-bot-keycloak  | The name was interpreted by this TemplateLoader: org.keycloak.theme.freemarker.DefaultFreeMarkerProvider$ThemeTemplateLoader@37467011.
+voice-bot-keycloak  | 
+voice-bot-keycloak  | ----
+voice-bot-keycloak  | FTL stack trace ("~" means nesting-related):
+voice-bot-keycloak  | 	- Failed at: #import "template.ftl" as layout  [in template "login.ftl" at line 1, column 1]
+voice-bot-keycloak  | ----
+voice-bot-keycloak  | 	at freemarker.core.LibraryLoad.accept(LibraryLoad.java:67)
+voice-bot-keycloak  | 	at freemarker.core.Environment.visit(Environment.java:335)
+voice-bot-keycloak  | 	at freemarker.core.Environment.visit(Environment.java:341)
+voice-bot-keycloak  | 	at freemarker.core.Environment.process(Environment.java:314)
+voice-bot-keycloak  | 	at freemarker.template.Template.process(Template.java:383)
+voice-bot-keycloak  | 	at org.keycloak.theme.freemarker.DefaultFreeMarkerProvider.processTemplate(DefaultFreeMarkerProvider.java:49)
+voice-bot-keycloak  | 	... 26 more
+voice-bot-keycloak  | Caused by: freemarker.template.TemplateNotFoundException: Template not found for name "template.ftl".
+voice-bot-keycloak  | The name was interpreted by this TemplateLoader: org.keycloak.theme.freemarker.DefaultFreeMarkerProvider$ThemeTemplateLoader@37467011.
+voice-bot-keycloak  | 	at freemarker.template.Configuration.getTemplate(Configuration.java:2957)
+voice-bot-keycloak  | 	at freemarker.core.Environment.getTemplateForInclusion(Environment.java:3062)
+voice-bot-keycloak  | 	at freemarker.core.Environment.getTemplateForInclusion(Environment.java:3024)
+voice-bot-keycloak  | 	at freemarker.core.Environment.getTemplateForImporting(Environment.java:3186)
+voice-bot-keycloak  | 	at freemarker.core.Environment.importLib(Environment.java:3171)
+voice-bot-keycloak  | 	at freemarker.core.Environment.importLib(Environment.java:3135)
+voice-bot-keycloak  | 	at freemarker.core.LibraryLoad.accept(LibraryLoad.java:65)
+voice-bot-keycloak  | 	... 31 more
+voice-bot-keycloak  | 
+voice-bot-keycloak  | 2026-04-22 06:38:19,935 ERROR [org.keycloak.headers.DefaultSecurityHeadersProvider] (executor-thread-3) MediaType not set on path /realms/aura-ai/protocol/openid-connect/auth, with response status 500
+voice-bot-keycloak  | 2026-04-22 06:38:19,936 ERROR [org.keycloak.services.error.KeycloakErrorHandler] (executor-thread-3) Uncaught server error: jakarta.ws.rs.InternalServerErrorException: HTTP 500 Internal Server Error
+voice-bot-keycloak  | 	at org.keycloak.headers.DefaultSecurityHeadersProvider.addHeaders(DefaultSecurityHeadersProvider.java:75)
+voice-bot-keycloak  | 	at org.keycloak.services.filters.KeycloakSecurityHeadersFilter.filter(KeycloakSecurityHeadersFilter.java:43)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.server.handlers.ResourceResponseFilterHandler.handle(ResourceResponseFilterHandler.java:25)
+voice-bot-keycloak  | 	at io.quarkus.resteasy.reactive.server.runtime.QuarkusResteasyReactiveRequestContext.invokeHandler(QuarkusResteasyReactiveRequestContext.java:150)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.common.core.AbstractResteasyReactiveContext.run(AbstractResteasyReactiveContext.java:147)
+voice-bot-keycloak  | 	at io.quarkus.vertx.core.runtime.VertxCoreRecorder$14.runWith(VertxCoreRecorder.java:582)
+voice-bot-keycloak  | 	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2513)
+voice-bot-keycloak  | 	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1538)
+voice-bot-keycloak  | 	at org.jboss.threads.DelegatingRunnable.run(DelegatingRunnable.java:29)
+voice-bot-keycloak  | 	at org.jboss.threads.ThreadLocalResettingRunnable.run(ThreadLocalResettingRunnable.java:29)
+voice-bot-keycloak  | 	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+voice-bot-keycloak  | 	at java.base/java.lang.Thread.run(Thread.java:840)
+voice-bot-keycloak  | 
+voice-bot-keycloak  | 2026-04-22 06:38:19,937 ERROR [org.keycloak.services.error.KeycloakErrorHandler] (executor-thread-3) Failed to create error page: org.keycloak.theme.FreeMarkerException: Failed to process template error.ftl
+voice-bot-keycloak  | 	at org.keycloak.theme.freemarker.DefaultFreeMarkerProvider.processTemplate(DefaultFreeMarkerProvider.java:52)
+voice-bot-keycloak  | 	at org.keycloak.services.error.KeycloakErrorHandler.getResponse(KeycloakErrorHandler.java:108)
+voice-bot-keycloak  | 	at org.keycloak.services.error.KeycloakErrorHandler.toResponse(KeycloakErrorHandler.java:67)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.server.core.RuntimeExceptionMapper.mapException(RuntimeExceptionMapper.java:100)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.server.core.ResteasyReactiveRequestContext.mapExceptionIfPresent(ResteasyReactiveRequestContext.java:346)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.server.handlers.ExceptionHandler.handle(ExceptionHandler.java:15)
+voice-bot-keycloak  | 	at io.quarkus.resteasy.reactive.server.runtime.QuarkusResteasyReactiveRequestContext.invokeHandler(QuarkusResteasyReactiveRequestContext.java:150)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.common.core.AbstractResteasyReactiveContext.run(AbstractResteasyReactiveContext.java:147)
+voice-bot-keycloak  | 	at io.quarkus.vertx.core.runtime.VertxCoreRecorder$14.runWith(VertxCoreRecorder.java:582)
+voice-bot-keycloak  | 	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2513)
+voice-bot-keycloak  | 	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1538)
+voice-bot-keycloak  | 	at org.jboss.threads.DelegatingRunnable.run(DelegatingRunnable.java:29)
+voice-bot-keycloak  | 	at org.jboss.threads.ThreadLocalResettingRunnable.run(ThreadLocalResettingRunnable.java:29)
+voice-bot-keycloak  | 	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+voice-bot-keycloak  | 	at java.base/java.lang.Thread.run(Thread.java:840)
+voice-bot-keycloak  | Caused by: freemarker.template.TemplateNotFoundException: Template not found for name "error.ftl".
+voice-bot-keycloak  | The name was interpreted by this TemplateLoader: org.keycloak.theme.freemarker.DefaultFreeMarkerProvider$ThemeTemplateLoader@6ecf180f.
+voice-bot-keycloak  | 	at freemarker.template.Configuration.getTemplate(Configuration.java:2957)
+voice-bot-keycloak  | 	at freemarker.template.Configuration.getTemplate(Configuration.java:2777)
+voice-bot-keycloak  | 	at org.keycloak.theme.freemarker.DefaultFreeMarkerProvider.getTemplate(DefaultFreeMarkerProvider.java:66)
+voice-bot-keycloak  | 	at org.keycloak.theme.freemarker.DefaultFreeMarkerProvider.processTemplate(DefaultFreeMarkerProvider.java:45)
+voice-bot-keycloak  | 	... 14 more
+voice-bot-keycloak  | 
+voice-bot-keycloak  | 2026-04-22 06:38:19,937 ERROR [org.keycloak.headers.DefaultSecurityHeadersProvider] (executor-thread-3) MediaType not set on path /realms/aura-ai/protocol/openid-connect/auth, with response status 500
+voice-bot-keycloak  | 2026-04-22 06:38:19,938 ERROR [io.quarkus.vertx.http.runtime.QuarkusErrorHandler] (executor-thread-3) HTTP Request to /realms/aura-ai/protocol/openid-connect/auth?client_id=aura-client&redirect_uri=https%3A%2F%2Ficq-merry-really-dropped.trycloudflare.com%2F&state=b6bfa85e-15fa-4734-90a3-4bdb9e2bd232&response_mode=fragment&response_type=code&scope=openid&nonce=a6563532-34e7-4611-8b77-337f50ef7f98&code_challenge=YeBlWRbpBGV8MatcoAZ-KEDSL4Od2Xnmx4YN4oMFzbA&code_challenge_method=S256 failed, error id: 15fd9eec-fd18-4d96-ac5c-34ccc345e640-3: jakarta.ws.rs.InternalServerErrorException: HTTP 500 Internal Server Error
+voice-bot-keycloak  | 	at org.keycloak.headers.DefaultSecurityHeadersProvider.addHeaders(DefaultSecurityHeadersProvider.java:75)
+voice-bot-keycloak  | 	at org.keycloak.services.filters.KeycloakSecurityHeadersFilter.filter(KeycloakSecurityHeadersFilter.java:43)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.server.handlers.ResourceResponseFilterHandler.handle(ResourceResponseFilterHandler.java:25)
+voice-bot-keycloak  | 	at io.quarkus.resteasy.reactive.server.runtime.QuarkusResteasyReactiveRequestContext.invokeHandler(QuarkusResteasyReactiveRequestContext.java:150)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.common.core.AbstractResteasyReactiveContext.run(AbstractResteasyReactiveContext.java:147)
+voice-bot-keycloak  | 	at io.quarkus.vertx.core.runtime.VertxCoreRecorder$14.runWith(VertxCoreRecorder.java:582)
+voice-bot-keycloak  | 	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2513)
+voice-bot-keycloak  | 	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1538)
+voice-bot-keycloak  | 	at org.jboss.threads.DelegatingRunnable.run(DelegatingRunnable.java:29)
+voice-bot-keycloak  | 	at org.jboss.threads.ThreadLocalResettingRunnable.run(ThreadLocalResettingRunnable.java:29)
+voice-bot-keycloak  | 	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+voice-bot-keycloak  | 	at java.base/java.lang.Thread.run(Thread.java:840)
+voice-bot-keycloak  | 
+voice-bot-keycloak  | 2026-04-22 06:38:20,489 SEVERE [freemarker.runtime] (executor-thread-3) Error executing FreeMarker template: freemarker.core._MiscTemplateException: Template importing failed (for parameter value "template.ftl"):
+voice-bot-keycloak  | Template not found for name "template.ftl".
+voice-bot-keycloak  | The name was interpreted by this TemplateLoader: org.keycloak.theme.freemarker.DefaultFreeMarkerProvider$ThemeTemplateLoader@4ba6e11d.
+voice-bot-keycloak  | 
+voice-bot-keycloak  | ----
+voice-bot-keycloak  | FTL stack trace ("~" means nesting-related):
+voice-bot-keycloak  | 	- Failed at: #import "template.ftl" as layout  [in template "login.ftl" at line 1, column 1]
+voice-bot-keycloak  | ----
+voice-bot-keycloak  | 	at freemarker.core.LibraryLoad.accept(LibraryLoad.java:67)
+voice-bot-keycloak  | 	at freemarker.core.Environment.visit(Environment.java:335)
+voice-bot-keycloak  | 	at freemarker.core.Environment.visit(Environment.java:341)
+voice-bot-keycloak  | 	at freemarker.core.Environment.process(Environment.java:314)
+voice-bot-keycloak  | 	at freemarker.template.Template.process(Template.java:383)
+voice-bot-keycloak  | 	at org.keycloak.theme.freemarker.DefaultFreeMarkerProvider.processTemplate(DefaultFreeMarkerProvider.java:49)
+voice-bot-keycloak  | 	at org.keycloak.forms.login.freemarker.FreeMarkerLoginFormsProvider.processTemplate(FreeMarkerLoginFormsProvider.java:544)
+voice-bot-keycloak  | 	at org.keycloak.forms.login.freemarker.FreeMarkerLoginFormsProvider.createResponse(FreeMarkerLoginFormsProvider.java:316)
+voice-bot-keycloak  | 	at org.keycloak.forms.login.freemarker.FreeMarkerLoginFormsProvider.createLoginUsernamePassword(FreeMarkerLoginFormsProvider.java:558)
+voice-bot-keycloak  | 	at org.keycloak.authentication.authenticators.browser.UsernamePasswordForm.challenge(UsernamePasswordForm.java:95)
+voice-bot-keycloak  | 	at org.keycloak.authentication.authenticators.browser.UsernamePasswordForm.authenticate(UsernamePasswordForm.java:81)
+voice-bot-keycloak  | 	at org.keycloak.authentication.DefaultAuthenticationFlow.processSingleFlowExecutionModel(DefaultAuthenticationFlow.java:442)
+voice-bot-keycloak  | 	at org.keycloak.authentication.DefaultAuthenticationFlow.processFlow(DefaultAuthenticationFlow.java:246)
+voice-bot-keycloak  | 	at org.keycloak.authentication.DefaultAuthenticationFlow.processSingleFlowExecutionModel(DefaultAuthenticationFlow.java:377)
+voice-bot-keycloak  | 	at org.keycloak.authentication.DefaultAuthenticationFlow.processFlow(DefaultAuthenticationFlow.java:268)
+voice-bot-keycloak  | 	at org.keycloak.authentication.AuthenticationProcessor.authenticateOnly(AuthenticationProcessor.java:1027)
+voice-bot-keycloak  | 	at org.keycloak.authentication.AuthenticationProcessor.authenticate(AuthenticationProcessor.java:884)
+voice-bot-keycloak  | 	at org.keycloak.protocol.AuthorizationEndpointBase.handleBrowserAuthenticationRequest(AuthorizationEndpointBase.java:152)
+voice-bot-keycloak  | 	at org.keycloak.protocol.oidc.endpoints.AuthorizationEndpoint.buildAuthorizationCodeAuthorizationResponse(AuthorizationEndpoint.java:337)
+voice-bot-keycloak  | 	at org.keycloak.protocol.oidc.endpoints.AuthorizationEndpoint.process(AuthorizationEndpoint.java:202)
+voice-bot-keycloak  | 	at org.keycloak.protocol.oidc.endpoints.AuthorizationEndpoint.buildGet(AuthorizationEndpoint.java:113)
+voice-bot-keycloak  | 	at org.keycloak.protocol.oidc.endpoints.AuthorizationEndpoint$quarkusrestinvoker$buildGet_4b690b27439f19dd29733dc5fd4004f24de0adb6.invoke(Unknown Source)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.server.handlers.InvocationHandler.handle(InvocationHandler.java:29)
+voice-bot-keycloak  | 	at io.quarkus.resteasy.reactive.server.runtime.QuarkusResteasyReactiveRequestContext.invokeHandler(QuarkusResteasyReactiveRequestContext.java:141)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.common.core.AbstractResteasyReactiveContext.run(AbstractResteasyReactiveContext.java:147)
+voice-bot-keycloak  | 	at io.quarkus.vertx.core.runtime.VertxCoreRecorder$14.runWith(VertxCoreRecorder.java:582)
+voice-bot-keycloak  | 	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2513)
+voice-bot-keycloak  | 	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1538)
+voice-bot-keycloak  | 	at org.jboss.threads.DelegatingRunnable.run(DelegatingRunnable.java:29)
+voice-bot-keycloak  | 	at org.jboss.threads.ThreadLocalResettingRunnable.run(ThreadLocalResettingRunnable.java:29)
+voice-bot-keycloak  | 	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+voice-bot-keycloak  | 	at java.base/java.lang.Thread.run(Thread.java:840)
+voice-bot-keycloak  | Caused by: freemarker.template.TemplateNotFoundException: Template not found for name "template.ftl".
+voice-bot-keycloak  | The name was interpreted by this TemplateLoader: org.keycloak.theme.freemarker.DefaultFreeMarkerProvider$ThemeTemplateLoader@4ba6e11d.
+voice-bot-keycloak  | 	at freemarker.template.Configuration.getTemplate(Configuration.java:2957)
+voice-bot-keycloak  | 	at freemarker.core.Environment.getTemplateForInclusion(Environment.java:3062)
+voice-bot-keycloak  | 	at freemarker.core.Environment.getTemplateForInclusion(Environment.java:3024)
+voice-bot-keycloak  | 	at freemarker.core.Environment.getTemplateForImporting(Environment.java:3186)
+voice-bot-keycloak  | 	at freemarker.core.Environment.importLib(Environment.java:3171)
+voice-bot-keycloak  | 	at freemarker.core.Environment.importLib(Environment.java:3135)
+voice-bot-keycloak  | 	at freemarker.core.LibraryLoad.accept(LibraryLoad.java:65)
+voice-bot-keycloak  | 	... 31 more
+voice-bot-keycloak  | 
+voice-bot-keycloak  | 2026-04-22 06:38:20,490 ERROR [org.keycloak.forms.login.freemarker.FreeMarkerLoginFormsProvider] (executor-thread-3) Failed to process template: org.keycloak.theme.FreeMarkerException: Failed to process template login.ftl
+voice-bot-keycloak  | 	at org.keycloak.theme.freemarker.DefaultFreeMarkerProvider.processTemplate(DefaultFreeMarkerProvider.java:52)
+voice-bot-keycloak  | 	at org.keycloak.forms.login.freemarker.FreeMarkerLoginFormsProvider.processTemplate(FreeMarkerLoginFormsProvider.java:544)
+voice-bot-keycloak  | 	at org.keycloak.forms.login.freemarker.FreeMarkerLoginFormsProvider.createResponse(FreeMarkerLoginFormsProvider.java:316)
+voice-bot-keycloak  | 	at org.keycloak.forms.login.freemarker.FreeMarkerLoginFormsProvider.createLoginUsernamePassword(FreeMarkerLoginFormsProvider.java:558)
+voice-bot-keycloak  | 	at org.keycloak.authentication.authenticators.browser.UsernamePasswordForm.challenge(UsernamePasswordForm.java:95)
+voice-bot-keycloak  | 	at org.keycloak.authentication.authenticators.browser.UsernamePasswordForm.authenticate(UsernamePasswordForm.java:81)
+voice-bot-keycloak  | 	at org.keycloak.authentication.DefaultAuthenticationFlow.processSingleFlowExecutionModel(DefaultAuthenticationFlow.java:442)
+voice-bot-keycloak  | 	at org.keycloak.authentication.DefaultAuthenticationFlow.processFlow(DefaultAuthenticationFlow.java:246)
+voice-bot-keycloak  | 	at org.keycloak.authentication.DefaultAuthenticationFlow.processSingleFlowExecutionModel(DefaultAuthenticationFlow.java:377)
+voice-bot-keycloak  | 	at org.keycloak.authentication.DefaultAuthenticationFlow.processFlow(DefaultAuthenticationFlow.java:268)
+voice-bot-keycloak  | 	at org.keycloak.authentication.AuthenticationProcessor.authenticateOnly(AuthenticationProcessor.java:1027)
+voice-bot-keycloak  | 	at org.keycloak.authentication.AuthenticationProcessor.authenticate(AuthenticationProcessor.java:884)
+voice-bot-keycloak  | 	at org.keycloak.protocol.AuthorizationEndpointBase.handleBrowserAuthenticationRequest(AuthorizationEndpointBase.java:152)
+voice-bot-keycloak  | 	at org.keycloak.protocol.oidc.endpoints.AuthorizationEndpoint.buildAuthorizationCodeAuthorizationResponse(AuthorizationEndpoint.java:337)
+voice-bot-keycloak  | 	at org.keycloak.protocol.oidc.endpoints.AuthorizationEndpoint.process(AuthorizationEndpoint.java:202)
+voice-bot-keycloak  | 	at org.keycloak.protocol.oidc.endpoints.AuthorizationEndpoint.buildGet(AuthorizationEndpoint.java:113)
+voice-bot-keycloak  | 	at org.keycloak.protocol.oidc.endpoints.AuthorizationEndpoint$quarkusrestinvoker$buildGet_4b690b27439f19dd29733dc5fd4004f24de0adb6.invoke(Unknown Source)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.server.handlers.InvocationHandler.handle(InvocationHandler.java:29)
+voice-bot-keycloak  | 	at io.quarkus.resteasy.reactive.server.runtime.QuarkusResteasyReactiveRequestContext.invokeHandler(QuarkusResteasyReactiveRequestContext.java:141)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.common.core.AbstractResteasyReactiveContext.run(AbstractResteasyReactiveContext.java:147)
+voice-bot-keycloak  | 	at io.quarkus.vertx.core.runtime.VertxCoreRecorder$14.runWith(VertxCoreRecorder.java:582)
+voice-bot-keycloak  | 	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2513)
+voice-bot-keycloak  | 	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1538)
+voice-bot-keycloak  | 	at org.jboss.threads.DelegatingRunnable.run(DelegatingRunnable.java:29)
+voice-bot-keycloak  | 	at org.jboss.threads.ThreadLocalResettingRunnable.run(ThreadLocalResettingRunnable.java:29)
+voice-bot-keycloak  | 	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+voice-bot-keycloak  | 	at java.base/java.lang.Thread.run(Thread.java:840)
+voice-bot-keycloak  | Caused by: freemarker.core._MiscTemplateException: Template importing failed (for parameter value "template.ftl"):
+voice-bot-keycloak  | Template not found for name "template.ftl".
+voice-bot-keycloak  | The name was interpreted by this TemplateLoader: org.keycloak.theme.freemarker.DefaultFreeMarkerProvider$ThemeTemplateLoader@4ba6e11d.
+voice-bot-keycloak  | 
+voice-bot-keycloak  | ----
+voice-bot-keycloak  | FTL stack trace ("~" means nesting-related):
+voice-bot-keycloak  | 	- Failed at: #import "template.ftl" as layout  [in template "login.ftl" at line 1, column 1]
+voice-bot-keycloak  | ----
+voice-bot-keycloak  | 	at freemarker.core.LibraryLoad.accept(LibraryLoad.java:67)
+voice-bot-keycloak  | 	at freemarker.core.Environment.visit(Environment.java:335)
+voice-bot-keycloak  | 	at freemarker.core.Environment.visit(Environment.java:341)
+voice-bot-keycloak  | 	at freemarker.core.Environment.process(Environment.java:314)
+voice-bot-keycloak  | 	at freemarker.template.Template.process(Template.java:383)
+voice-bot-keycloak  | 	at org.keycloak.theme.freemarker.DefaultFreeMarkerProvider.processTemplate(DefaultFreeMarkerProvider.java:49)
+voice-bot-keycloak  | 	... 26 more
+voice-bot-keycloak  | Caused by: freemarker.template.TemplateNotFoundException: Template not found for name "template.ftl".
+voice-bot-keycloak  | The name was interpreted by this TemplateLoader: org.keycloak.theme.freemarker.DefaultFreeMarkerProvider$ThemeTemplateLoader@4ba6e11d.
+voice-bot-keycloak  | 	at freemarker.template.Configuration.getTemplate(Configuration.java:2957)
+voice-bot-keycloak  | 	at freemarker.core.Environment.getTemplateForInclusion(Environment.java:3062)
+voice-bot-keycloak  | 	at freemarker.core.Environment.getTemplateForInclusion(Environment.java:3024)
+voice-bot-keycloak  | 	at freemarker.core.Environment.getTemplateForImporting(Environment.java:3186)
+voice-bot-keycloak  | 	at freemarker.core.Environment.importLib(Environment.java:3171)
+voice-bot-keycloak  | 	at freemarker.core.Environment.importLib(Environment.java:3135)
+voice-bot-keycloak  | 	at freemarker.core.LibraryLoad.accept(LibraryLoad.java:65)
+voice-bot-keycloak  | 	... 31 more
+voice-bot-keycloak  | 
+voice-bot-keycloak  | 2026-04-22 06:38:20,490 ERROR [org.keycloak.headers.DefaultSecurityHeadersProvider] (executor-thread-3) MediaType not set on path /realms/aura-ai/protocol/openid-connect/auth, with response status 500
+voice-bot-keycloak  | 2026-04-22 06:38:20,491 ERROR [org.keycloak.services.error.KeycloakErrorHandler] (executor-thread-3) Uncaught server error: jakarta.ws.rs.InternalServerErrorException: HTTP 500 Internal Server Error
+voice-bot-keycloak  | 	at org.keycloak.headers.DefaultSecurityHeadersProvider.addHeaders(DefaultSecurityHeadersProvider.java:75)
+voice-bot-keycloak  | 	at org.keycloak.services.filters.KeycloakSecurityHeadersFilter.filter(KeycloakSecurityHeadersFilter.java:43)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.server.handlers.ResourceResponseFilterHandler.handle(ResourceResponseFilterHandler.java:25)
+voice-bot-keycloak  | 	at io.quarkus.resteasy.reactive.server.runtime.QuarkusResteasyReactiveRequestContext.invokeHandler(QuarkusResteasyReactiveRequestContext.java:150)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.common.core.AbstractResteasyReactiveContext.run(AbstractResteasyReactiveContext.java:147)
+voice-bot-keycloak  | 	at io.quarkus.vertx.core.runtime.VertxCoreRecorder$14.runWith(VertxCoreRecorder.java:582)
+voice-bot-keycloak  | 	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2513)
+voice-bot-keycloak  | 	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1538)
+voice-bot-keycloak  | 	at org.jboss.threads.DelegatingRunnable.run(DelegatingRunnable.java:29)
+voice-bot-keycloak  | 	at org.jboss.threads.ThreadLocalResettingRunnable.run(ThreadLocalResettingRunnable.java:29)
+voice-bot-keycloak  | 	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+voice-bot-keycloak  | 	at java.base/java.lang.Thread.run(Thread.java:840)
+voice-bot-keycloak  | 
+voice-bot-keycloak  | 2026-04-22 06:38:20,492 ERROR [org.keycloak.services.error.KeycloakErrorHandler] (executor-thread-3) Failed to create error page: org.keycloak.theme.FreeMarkerException: Failed to process template error.ftl
+voice-bot-keycloak  | 	at org.keycloak.theme.freemarker.DefaultFreeMarkerProvider.processTemplate(DefaultFreeMarkerProvider.java:52)
+voice-bot-keycloak  | 	at org.keycloak.services.error.KeycloakErrorHandler.getResponse(KeycloakErrorHandler.java:108)
+voice-bot-keycloak  | 	at org.keycloak.services.error.KeycloakErrorHandler.toResponse(KeycloakErrorHandler.java:67)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.server.core.RuntimeExceptionMapper.mapException(RuntimeExceptionMapper.java:100)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.server.core.ResteasyReactiveRequestContext.mapExceptionIfPresent(ResteasyReactiveRequestContext.java:346)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.server.handlers.ExceptionHandler.handle(ExceptionHandler.java:15)
+voice-bot-keycloak  | 	at io.quarkus.resteasy.reactive.server.runtime.QuarkusResteasyReactiveRequestContext.invokeHandler(QuarkusResteasyReactiveRequestContext.java:150)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.common.core.AbstractResteasyReactiveContext.run(AbstractResteasyReactiveContext.java:147)
+voice-bot-keycloak  | 	at io.quarkus.vertx.core.runtime.VertxCoreRecorder$14.runWith(VertxCoreRecorder.java:582)
+voice-bot-keycloak  | 	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2513)
+voice-bot-keycloak  | 	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1538)
+voice-bot-keycloak  | 	at org.jboss.threads.DelegatingRunnable.run(DelegatingRunnable.java:29)
+voice-bot-keycloak  | 	at org.jboss.threads.ThreadLocalResettingRunnable.run(ThreadLocalResettingRunnable.java:29)
+voice-bot-keycloak  | 	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+voice-bot-keycloak  | 	at java.base/java.lang.Thread.run(Thread.java:840)
+voice-bot-keycloak  | Caused by: freemarker.template.TemplateNotFoundException: Template not found for name "error.ftl".
+voice-bot-keycloak  | The name was interpreted by this TemplateLoader: org.keycloak.theme.freemarker.DefaultFreeMarkerProvider$ThemeTemplateLoader@3b5b9e4a.
+voice-bot-keycloak  | 	at freemarker.template.Configuration.getTemplate(Configuration.java:2957)
+voice-bot-keycloak  | 	at freemarker.template.Configuration.getTemplate(Configuration.java:2777)
+voice-bot-keycloak  | 	at org.keycloak.theme.freemarker.DefaultFreeMarkerProvider.getTemplate(DefaultFreeMarkerProvider.java:66)
+voice-bot-keycloak  | 	at org.keycloak.theme.freemarker.DefaultFreeMarkerProvider.processTemplate(DefaultFreeMarkerProvider.java:45)
+voice-bot-keycloak  | 	... 14 more
+voice-bot-keycloak  | 
+voice-bot-keycloak  | 2026-04-22 06:38:20,492 ERROR [org.keycloak.headers.DefaultSecurityHeadersProvider] (executor-thread-3) MediaType not set on path /realms/aura-ai/protocol/openid-connect/auth, with response status 500
+voice-bot-keycloak  | 2026-04-22 06:38:20,493 ERROR [io.quarkus.vertx.http.runtime.QuarkusErrorHandler] (executor-thread-3) HTTP Request to /realms/aura-ai/protocol/openid-connect/auth?client_id=aura-client&redirect_uri=https%3A%2F%2Ficq-merry-really-dropped.trycloudflare.com%2F&state=b6bfa85e-15fa-4734-90a3-4bdb9e2bd232&response_mode=fragment&response_type=code&scope=openid&nonce=a6563532-34e7-4611-8b77-337f50ef7f98&code_challenge=YeBlWRbpBGV8MatcoAZ-KEDSL4Od2Xnmx4YN4oMFzbA&code_challenge_method=S256 failed, error id: 15fd9eec-fd18-4d96-ac5c-34ccc345e640-4: jakarta.ws.rs.InternalServerErrorException: HTTP 500 Internal Server Error
+voice-bot-keycloak  | 	at org.keycloak.headers.DefaultSecurityHeadersProvider.addHeaders(DefaultSecurityHeadersProvider.java:75)
+voice-bot-keycloak  | 	at org.keycloak.services.filters.KeycloakSecurityHeadersFilter.filter(KeycloakSecurityHeadersFilter.java:43)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.server.handlers.ResourceResponseFilterHandler.handle(ResourceResponseFilterHandler.java:25)
+voice-bot-keycloak  | 	at io.quarkus.resteasy.reactive.server.runtime.QuarkusResteasyReactiveRequestContext.invokeHandler(QuarkusResteasyReactiveRequestContext.java:150)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.common.core.AbstractResteasyReactiveContext.run(AbstractResteasyReactiveContext.java:147)
+voice-bot-keycloak  | 	at io.quarkus.vertx.core.runtime.VertxCoreRecorder$14.runWith(VertxCoreRecorder.java:582)
+voice-bot-keycloak  | 	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2513)
+voice-bot-keycloak  | 	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1538)
+voice-bot-keycloak  | 	at org.jboss.threads.DelegatingRunnable.run(DelegatingRunnable.java:29)
+voice-bot-keycloak  | 	at org.jboss.threads.ThreadLocalResettingRunnable.run(ThreadLocalResettingRunnable.java:29)
+voice-bot-keycloak  | 	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+voice-bot-keycloak  | 	at java.base/java.lang.Thread.run(Thread.java:840)
+voice-bot-keycloak  | 
+voice-bot-keycloak  | 2026-04-22 06:38:27,905 SEVERE [freemarker.runtime] (executor-thread-3) Error executing FreeMarker template: freemarker.core._MiscTemplateException: Template importing failed (for parameter value "template.ftl"):
+voice-bot-keycloak  | Template not found for name "template.ftl".
+voice-bot-keycloak  | The name was interpreted by this TemplateLoader: org.keycloak.theme.freemarker.DefaultFreeMarkerProvider$ThemeTemplateLoader@4b83dc38.
+voice-bot-keycloak  | 
+voice-bot-keycloak  | ----
+voice-bot-keycloak  | FTL stack trace ("~" means nesting-related):
+voice-bot-keycloak  | 	- Failed at: #import "template.ftl" as layout  [in template "login.ftl" at line 1, column 1]
+voice-bot-keycloak  | ----
+voice-bot-keycloak  | 	at freemarker.core.LibraryLoad.accept(LibraryLoad.java:67)
+voice-bot-keycloak  | 	at freemarker.core.Environment.visit(Environment.java:335)
+voice-bot-keycloak  | 	at freemarker.core.Environment.visit(Environment.java:341)
+voice-bot-keycloak  | 	at freemarker.core.Environment.process(Environment.java:314)
+voice-bot-keycloak  | 	at freemarker.template.Template.process(Template.java:383)
+voice-bot-keycloak  | 	at org.keycloak.theme.freemarker.DefaultFreeMarkerProvider.processTemplate(DefaultFreeMarkerProvider.java:49)
+voice-bot-keycloak  | 	at org.keycloak.forms.login.freemarker.FreeMarkerLoginFormsProvider.processTemplate(FreeMarkerLoginFormsProvider.java:544)
+voice-bot-keycloak  | 	at org.keycloak.forms.login.freemarker.FreeMarkerLoginFormsProvider.createResponse(FreeMarkerLoginFormsProvider.java:316)
+voice-bot-keycloak  | 	at org.keycloak.forms.login.freemarker.FreeMarkerLoginFormsProvider.createLoginUsernamePassword(FreeMarkerLoginFormsProvider.java:558)
+voice-bot-keycloak  | 	at org.keycloak.authentication.authenticators.browser.UsernamePasswordForm.challenge(UsernamePasswordForm.java:95)
+voice-bot-keycloak  | 	at org.keycloak.authentication.authenticators.browser.UsernamePasswordForm.authenticate(UsernamePasswordForm.java:81)
+voice-bot-keycloak  | 	at org.keycloak.authentication.DefaultAuthenticationFlow.processSingleFlowExecutionModel(DefaultAuthenticationFlow.java:442)
+voice-bot-keycloak  | 	at org.keycloak.authentication.DefaultAuthenticationFlow.processFlow(DefaultAuthenticationFlow.java:246)
+voice-bot-keycloak  | 	at org.keycloak.authentication.DefaultAuthenticationFlow.processSingleFlowExecutionModel(DefaultAuthenticationFlow.java:377)
+voice-bot-keycloak  | 	at org.keycloak.authentication.DefaultAuthenticationFlow.processFlow(DefaultAuthenticationFlow.java:268)
+voice-bot-keycloak  | 	at org.keycloak.authentication.AuthenticationProcessor.authenticateOnly(AuthenticationProcessor.java:1027)
+voice-bot-keycloak  | 	at org.keycloak.authentication.AuthenticationProcessor.authenticate(AuthenticationProcessor.java:884)
+voice-bot-keycloak  | 	at org.keycloak.protocol.AuthorizationEndpointBase.handleBrowserAuthenticationRequest(AuthorizationEndpointBase.java:152)
+voice-bot-keycloak  | 	at org.keycloak.protocol.oidc.endpoints.AuthorizationEndpoint.buildAuthorizationCodeAuthorizationResponse(AuthorizationEndpoint.java:337)
+voice-bot-keycloak  | 	at org.keycloak.protocol.oidc.endpoints.AuthorizationEndpoint.process(AuthorizationEndpoint.java:202)
+voice-bot-keycloak  | 	at org.keycloak.protocol.oidc.endpoints.AuthorizationEndpoint.buildGet(AuthorizationEndpoint.java:113)
+voice-bot-keycloak  | 	at org.keycloak.protocol.oidc.endpoints.AuthorizationEndpoint$quarkusrestinvoker$buildGet_4b690b27439f19dd29733dc5fd4004f24de0adb6.invoke(Unknown Source)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.server.handlers.InvocationHandler.handle(InvocationHandler.java:29)
+voice-bot-keycloak  | 	at io.quarkus.resteasy.reactive.server.runtime.QuarkusResteasyReactiveRequestContext.invokeHandler(QuarkusResteasyReactiveRequestContext.java:141)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.common.core.AbstractResteasyReactiveContext.run(AbstractResteasyReactiveContext.java:147)
+voice-bot-keycloak  | 	at io.quarkus.vertx.core.runtime.VertxCoreRecorder$14.runWith(VertxCoreRecorder.java:582)
+voice-bot-keycloak  | 	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2513)
+voice-bot-keycloak  | 	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1538)
+voice-bot-keycloak  | 	at org.jboss.threads.DelegatingRunnable.run(DelegatingRunnable.java:29)
+voice-bot-keycloak  | 	at org.jboss.threads.ThreadLocalResettingRunnable.run(ThreadLocalResettingRunnable.java:29)
+voice-bot-keycloak  | 	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+voice-bot-keycloak  | 	at java.base/java.lang.Thread.run(Thread.java:840)
+voice-bot-keycloak  | Caused by: freemarker.template.TemplateNotFoundException: Template not found for name "template.ftl".
+voice-bot-keycloak  | The name was interpreted by this TemplateLoader: org.keycloak.theme.freemarker.DefaultFreeMarkerProvider$ThemeTemplateLoader@4b83dc38.
+voice-bot-keycloak  | 	at freemarker.template.Configuration.getTemplate(Configuration.java:2957)
+voice-bot-keycloak  | 	at freemarker.core.Environment.getTemplateForInclusion(Environment.java:3062)
+voice-bot-keycloak  | 	at freemarker.core.Environment.getTemplateForInclusion(Environment.java:3024)
+voice-bot-keycloak  | 	at freemarker.core.Environment.getTemplateForImporting(Environment.java:3186)
+voice-bot-keycloak  | 	at freemarker.core.Environment.importLib(Environment.java:3171)
+voice-bot-keycloak  | 	at freemarker.core.Environment.importLib(Environment.java:3135)
+voice-bot-keycloak  | 	at freemarker.core.LibraryLoad.accept(LibraryLoad.java:65)
+voice-bot-keycloak  | 	... 31 more
+voice-bot-keycloak  | 
+voice-bot-keycloak  | 2026-04-22 06:38:27,906 ERROR [org.keycloak.forms.login.freemarker.FreeMarkerLoginFormsProvider] (executor-thread-3) Failed to process template: org.keycloak.theme.FreeMarkerException: Failed to process template login.ftl
+voice-bot-keycloak  | 	at org.keycloak.theme.freemarker.DefaultFreeMarkerProvider.processTemplate(DefaultFreeMarkerProvider.java:52)
+voice-bot-keycloak  | 	at org.keycloak.forms.login.freemarker.FreeMarkerLoginFormsProvider.processTemplate(FreeMarkerLoginFormsProvider.java:544)
+voice-bot-keycloak  | 	at org.keycloak.forms.login.freemarker.FreeMarkerLoginFormsProvider.createResponse(FreeMarkerLoginFormsProvider.java:316)
+voice-bot-keycloak  | 	at org.keycloak.forms.login.freemarker.FreeMarkerLoginFormsProvider.createLoginUsernamePassword(FreeMarkerLoginFormsProvider.java:558)
+voice-bot-keycloak  | 	at org.keycloak.authentication.authenticators.browser.UsernamePasswordForm.challenge(UsernamePasswordForm.java:95)
+voice-bot-keycloak  | 	at org.keycloak.authentication.authenticators.browser.UsernamePasswordForm.authenticate(UsernamePasswordForm.java:81)
+voice-bot-keycloak  | 	at org.keycloak.authentication.DefaultAuthenticationFlow.processSingleFlowExecutionModel(DefaultAuthenticationFlow.java:442)
+voice-bot-keycloak  | 	at org.keycloak.authentication.DefaultAuthenticationFlow.processFlow(DefaultAuthenticationFlow.java:246)
+voice-bot-keycloak  | 	at org.keycloak.authentication.DefaultAuthenticationFlow.processSingleFlowExecutionModel(DefaultAuthenticationFlow.java:377)
+voice-bot-keycloak  | 	at org.keycloak.authentication.DefaultAuthenticationFlow.processFlow(DefaultAuthenticationFlow.java:268)
+voice-bot-keycloak  | 	at org.keycloak.authentication.AuthenticationProcessor.authenticateOnly(AuthenticationProcessor.java:1027)
+voice-bot-keycloak  | 	at org.keycloak.authentication.AuthenticationProcessor.authenticate(AuthenticationProcessor.java:884)
+voice-bot-keycloak  | 	at org.keycloak.protocol.AuthorizationEndpointBase.handleBrowserAuthenticationRequest(AuthorizationEndpointBase.java:152)
+voice-bot-keycloak  | 	at org.keycloak.protocol.oidc.endpoints.AuthorizationEndpoint.buildAuthorizationCodeAuthorizationResponse(AuthorizationEndpoint.java:337)
+voice-bot-keycloak  | 	at org.keycloak.protocol.oidc.endpoints.AuthorizationEndpoint.process(AuthorizationEndpoint.java:202)
+voice-bot-keycloak  | 	at org.keycloak.protocol.oidc.endpoints.AuthorizationEndpoint.buildGet(AuthorizationEndpoint.java:113)
+voice-bot-keycloak  | 	at org.keycloak.protocol.oidc.endpoints.AuthorizationEndpoint$quarkusrestinvoker$buildGet_4b690b27439f19dd29733dc5fd4004f24de0adb6.invoke(Unknown Source)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.server.handlers.InvocationHandler.handle(InvocationHandler.java:29)
+voice-bot-keycloak  | 	at io.quarkus.resteasy.reactive.server.runtime.QuarkusResteasyReactiveRequestContext.invokeHandler(QuarkusResteasyReactiveRequestContext.java:141)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.common.core.AbstractResteasyReactiveContext.run(AbstractResteasyReactiveContext.java:147)
+voice-bot-keycloak  | 	at io.quarkus.vertx.core.runtime.VertxCoreRecorder$14.runWith(VertxCoreRecorder.java:582)
+voice-bot-keycloak  | 	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2513)
+voice-bot-keycloak  | 	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1538)
+voice-bot-keycloak  | 	at org.jboss.threads.DelegatingRunnable.run(DelegatingRunnable.java:29)
+voice-bot-keycloak  | 	at org.jboss.threads.ThreadLocalResettingRunnable.run(ThreadLocalResettingRunnable.java:29)
+voice-bot-keycloak  | 	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+voice-bot-keycloak  | 	at java.base/java.lang.Thread.run(Thread.java:840)
+voice-bot-keycloak  | Caused by: freemarker.core._MiscTemplateException: Template importing failed (for parameter value "template.ftl"):
+voice-bot-keycloak  | Template not found for name "template.ftl".
+voice-bot-keycloak  | The name was interpreted by this TemplateLoader: org.keycloak.theme.freemarker.DefaultFreeMarkerProvider$ThemeTemplateLoader@4b83dc38.
+voice-bot-keycloak  | 
+voice-bot-keycloak  | ----
+voice-bot-keycloak  | FTL stack trace ("~" means nesting-related):
+voice-bot-keycloak  | 	- Failed at: #import "template.ftl" as layout  [in template "login.ftl" at line 1, column 1]
+voice-bot-keycloak  | ----
+voice-bot-keycloak  | 	at freemarker.core.LibraryLoad.accept(LibraryLoad.java:67)
+voice-bot-keycloak  | 	at freemarker.core.Environment.visit(Environment.java:335)
+voice-bot-keycloak  | 	at freemarker.core.Environment.visit(Environment.java:341)
+voice-bot-keycloak  | 	at freemarker.core.Environment.process(Environment.java:314)
+voice-bot-keycloak  | 	at freemarker.template.Template.process(Template.java:383)
+voice-bot-keycloak  | 	at org.keycloak.theme.freemarker.DefaultFreeMarkerProvider.processTemplate(DefaultFreeMarkerProvider.java:49)
+voice-bot-keycloak  | 	... 26 more
+voice-bot-keycloak  | Caused by: freemarker.template.TemplateNotFoundException: Template not found for name "template.ftl".
+voice-bot-keycloak  | The name was interpreted by this TemplateLoader: org.keycloak.theme.freemarker.DefaultFreeMarkerProvider$ThemeTemplateLoader@4b83dc38.
+voice-bot-keycloak  | 	at freemarker.template.Configuration.getTemplate(Configuration.java:2957)
+voice-bot-keycloak  | 	at freemarker.core.Environment.getTemplateForInclusion(Environment.java:3062)
+voice-bot-keycloak  | 	at freemarker.core.Environment.getTemplateForInclusion(Environment.java:3024)
+voice-bot-keycloak  | 	at freemarker.core.Environment.getTemplateForImporting(Environment.java:3186)
+voice-bot-keycloak  | 	at freemarker.core.Environment.importLib(Environment.java:3171)
+voice-bot-keycloak  | 	at freemarker.core.Environment.importLib(Environment.java:3135)
+voice-bot-keycloak  | 	at freemarker.core.LibraryLoad.accept(LibraryLoad.java:65)
+voice-bot-keycloak  | 	... 31 more
+voice-bot-keycloak  | 
+voice-bot-keycloak  | 2026-04-22 06:38:27,907 ERROR [org.keycloak.headers.DefaultSecurityHeadersProvider] (executor-thread-3) MediaType not set on path /realms/aura-ai/protocol/openid-connect/auth, with response status 500
+voice-bot-keycloak  | 2026-04-22 06:38:27,907 ERROR [org.keycloak.services.error.KeycloakErrorHandler] (executor-thread-3) Uncaught server error: jakarta.ws.rs.InternalServerErrorException: HTTP 500 Internal Server Error
+voice-bot-keycloak  | 	at org.keycloak.headers.DefaultSecurityHeadersProvider.addHeaders(DefaultSecurityHeadersProvider.java:75)
+voice-bot-keycloak  | 	at org.keycloak.services.filters.KeycloakSecurityHeadersFilter.filter(KeycloakSecurityHeadersFilter.java:43)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.server.handlers.ResourceResponseFilterHandler.handle(ResourceResponseFilterHandler.java:25)
+voice-bot-keycloak  | 	at io.quarkus.resteasy.reactive.server.runtime.QuarkusResteasyReactiveRequestContext.invokeHandler(QuarkusResteasyReactiveRequestContext.java:150)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.common.core.AbstractResteasyReactiveContext.run(AbstractResteasyReactiveContext.java:147)
+voice-bot-keycloak  | 	at io.quarkus.vertx.core.runtime.VertxCoreRecorder$14.runWith(VertxCoreRecorder.java:582)
+voice-bot-keycloak  | 	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2513)
+voice-bot-keycloak  | 	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1538)
+voice-bot-keycloak  | 	at org.jboss.threads.DelegatingRunnable.run(DelegatingRunnable.java:29)
+voice-bot-keycloak  | 	at org.jboss.threads.ThreadLocalResettingRunnable.run(ThreadLocalResettingRunnable.java:29)
+voice-bot-keycloak  | 	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+voice-bot-keycloak  | 	at java.base/java.lang.Thread.run(Thread.java:840)
+voice-bot-keycloak  | 
+voice-bot-keycloak  | 2026-04-22 06:38:27,908 ERROR [org.keycloak.services.error.KeycloakErrorHandler] (executor-thread-3) Failed to create error page: org.keycloak.theme.FreeMarkerException: Failed to process template error.ftl
+voice-bot-keycloak  | 	at org.keycloak.theme.freemarker.DefaultFreeMarkerProvider.processTemplate(DefaultFreeMarkerProvider.java:52)
+voice-bot-keycloak  | 	at org.keycloak.services.error.KeycloakErrorHandler.getResponse(KeycloakErrorHandler.java:108)
+voice-bot-keycloak  | 	at org.keycloak.services.error.KeycloakErrorHandler.toResponse(KeycloakErrorHandler.java:67)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.server.core.RuntimeExceptionMapper.mapException(RuntimeExceptionMapper.java:100)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.server.core.ResteasyReactiveRequestContext.mapExceptionIfPresent(ResteasyReactiveRequestContext.java:346)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.server.handlers.ExceptionHandler.handle(ExceptionHandler.java:15)
+voice-bot-keycloak  | 	at io.quarkus.resteasy.reactive.server.runtime.QuarkusResteasyReactiveRequestContext.invokeHandler(QuarkusResteasyReactiveRequestContext.java:150)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.common.core.AbstractResteasyReactiveContext.run(AbstractResteasyReactiveContext.java:147)
+voice-bot-keycloak  | 	at io.quarkus.vertx.core.runtime.VertxCoreRecorder$14.runWith(VertxCoreRecorder.java:582)
+voice-bot-keycloak  | 	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2513)
+voice-bot-keycloak  | 	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1538)
+voice-bot-keycloak  | 	at org.jboss.threads.DelegatingRunnable.run(DelegatingRunnable.java:29)
+voice-bot-keycloak  | 	at org.jboss.threads.ThreadLocalResettingRunnable.run(ThreadLocalResettingRunnable.java:29)
+voice-bot-keycloak  | 	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+voice-bot-keycloak  | 	at java.base/java.lang.Thread.run(Thread.java:840)
+voice-bot-keycloak  | Caused by: freemarker.template.TemplateNotFoundException: Template not found for name "error.ftl".
+voice-bot-keycloak  | The name was interpreted by this TemplateLoader: org.keycloak.theme.freemarker.DefaultFreeMarkerProvider$ThemeTemplateLoader@33a519cb.
+voice-bot-keycloak  | 	at freemarker.template.Configuration.getTemplate(Configuration.java:2957)
+voice-bot-keycloak  | 	at freemarker.template.Configuration.getTemplate(Configuration.java:2777)
+voice-bot-keycloak  | 	at org.keycloak.theme.freemarker.DefaultFreeMarkerProvider.getTemplate(DefaultFreeMarkerProvider.java:66)
+voice-bot-keycloak  | 	at org.keycloak.theme.freemarker.DefaultFreeMarkerProvider.processTemplate(DefaultFreeMarkerProvider.java:45)
+voice-bot-keycloak  | 	... 14 more
+voice-bot-keycloak  | 
+voice-bot-keycloak  | 2026-04-22 06:38:27,909 ERROR [org.keycloak.headers.DefaultSecurityHeadersProvider] (executor-thread-3) MediaType not set on path /realms/aura-ai/protocol/openid-connect/auth, with response status 500
+voice-bot-keycloak  | 2026-04-22 06:38:27,909 ERROR [io.quarkus.vertx.http.runtime.QuarkusErrorHandler] (executor-thread-3) HTTP Request to /realms/aura-ai/protocol/openid-connect/auth?client_id=aura-client&redirect_uri=https%3A%2F%2Ficq-merry-really-dropped.trycloudflare.com%2F&state=b6bfa85e-15fa-4734-90a3-4bdb9e2bd232&response_mode=fragment&response_type=code&scope=openid&nonce=a6563532-34e7-4611-8b77-337f50ef7f98&code_challenge=YeBlWRbpBGV8MatcoAZ-KEDSL4Od2Xnmx4YN4oMFzbA&code_challenge_method=S256 failed, error id: 15fd9eec-fd18-4d96-ac5c-34ccc345e640-5: jakarta.ws.rs.InternalServerErrorException: HTTP 500 Internal Server Error
+voice-bot-keycloak  | 	at org.keycloak.headers.DefaultSecurityHeadersProvider.addHeaders(DefaultSecurityHeadersProvider.java:75)
+voice-bot-keycloak  | 	at org.keycloak.services.filters.KeycloakSecurityHeadersFilter.filter(KeycloakSecurityHeadersFilter.java:43)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.server.handlers.ResourceResponseFilterHandler.handle(ResourceResponseFilterHandler.java:25)
+voice-bot-keycloak  | 	at io.quarkus.resteasy.reactive.server.runtime.QuarkusResteasyReactiveRequestContext.invokeHandler(QuarkusResteasyReactiveRequestContext.java:150)
+voice-bot-keycloak  | 	at org.jboss.resteasy.reactive.common.core.AbstractResteasyReactiveContext.run(AbstractResteasyReactiveContext.java:147)
+voice-bot-keycloak  | 	at io.quarkus.vertx.core.runtime.VertxCoreRecorder$14.runWith(VertxCoreRecorder.java:582)
+voice-bot-keycloak  | 	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2513)
+voice-bot-keycloak  | 	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1538)
+voice-bot-keycloak  | 	at org.jboss.threads.DelegatingRunnable.run(DelegatingRunnable.java:29)
+voice-bot-keycloak  | 	at org.jboss.threads.ThreadLocalResettingRunnable.run(ThreadLocalResettingRunnable.java:29)
+voice-bot-keycloak  | 	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+voice-bot-keycloak  | 	at java.base/java.lang.Thread.run(Thread.java:840)
+voice-bot-keycloak  | 

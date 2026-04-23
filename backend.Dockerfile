@@ -17,11 +17,13 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy MeloTTS and install dependencies with CPU index to avoid large CUDA downloads
+# Copy MeloTTS requirements first for better caching
+COPY MeloTTS/requirements.txt ./MeloTTS/requirements.txt
+RUN pip install --no-cache-dir -r ./MeloTTS/requirements.txt --extra-index-url https://download.pytorch.org/whl/cpu
+
+# Copy the rest of MeloTTS and install it in editable mode
 COPY MeloTTS ./MeloTTS
-RUN pip install --no-cache-dir -r ./MeloTTS/requirements.txt --extra-index-url https://download.pytorch.org/whl/cpu && \
-    pip install -e ./MeloTTS && \
-    python -m unidic download
+RUN pip install -e ./MeloTTS
 
 # Copy the rest of the backend code
 COPY . .

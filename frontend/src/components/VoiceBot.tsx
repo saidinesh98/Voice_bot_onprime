@@ -41,10 +41,12 @@ export default function VoiceBot() {
       isPlayingRef.current = false;
       if (audioQueueRef.current.length === 0) {
         setAudioLevel(0);
-        // Resume listening when bot finishes speaking
-        clientRef.current?.setRecordingEnabled(true);
-        // Signal backend to start accepting audio again
-        clientRef.current?.send({ type: "resume_listening" });
+        // Resume listening when bot finishes speaking, respecting manual mute state
+        clientRef.current?.setRecordingEnabled(!isMuted);
+        // Signal backend to start accepting audio again if not muted
+        if (!isMuted) {
+          clientRef.current?.send({ type: "resume_listening" });
+        }
       }
       return;
     }
@@ -189,7 +191,6 @@ export default function VoiceBot() {
             <div className="relative flex items-center justify-center">
               <div className="absolute inset-0 bg-gradient-to-br from-[#3b82f6] to-[#8b5cf6] rounded-lg blur-md opacity-40 group-hover:opacity-80 transition-opacity duration-500" />
               <div className="relative w-8 h-8 rounded-lg bg-[#0f172a] border border-white/10 flex items-center justify-center overflow-hidden">
-                <Activity className="w-5 h-5 text-blue-400 group-hover:text-white transition-all duration-500 group-hover:scale-110" />
                 <div className="absolute inset-0 bg-gradient-to-t from-blue-500/10 to-transparent pointer-events-none" />
               </div>
             </div>
@@ -243,22 +244,22 @@ export default function VoiceBot() {
           />
 
           {/* Core Orb */}
-          <motion.div 
-            animate={{ 
+          <motion.div
+            animate={{
               scale: isConnected ? 1 + audioLevel * 0.4 : 1,
-              boxShadow: isConnected 
+              boxShadow: isConnected
                 ? [`0 0 40px 15px rgba(59,130,246,0.4), 0 0 70px 30px rgba(139,92,246,0.2)`, `0 0 60px 25px rgba(59,130,246,0.6), 0 0 90px 40px rgba(139,92,246,0.3)`, `0 0 40px 15px rgba(59,130,246,0.4), 0 0 70px 30px rgba(139,92,246,0.2)`]
                 : `0 0 30px 5px rgba(255,255,255,0.05)`
             }}
-            transition={{ 
+            transition={{
               scale: { type: "spring", stiffness: 300, damping: 20 },
               boxShadow: { duration: 2, repeat: Infinity }
             }}
             className="w-[120px] h-[120px] rounded-full z-10 flex items-center justify-center relative overflow-hidden group/orb cursor-pointer"
           >
-            <img 
-              src="/aura-logo.png" 
-              alt="Aura Logo" 
+            <img
+              src="/aura-logo.png"
+              alt="Aura Logo"
               className={`w-full h-full object-contain transition-all duration-700 ${isConnected ? 'opacity-100 scale-100' : 'opacity-60 scale-95'}`}
             />
           </motion.div>
@@ -369,7 +370,14 @@ export default function VoiceBot() {
             <div className="flex items-center gap-4">
               <Tooltip>
                 <TooltipTrigger
-                  onClick={() => setIsMuted(!isMuted)}
+                  onClick={() => {
+                    const nextMuted = !isMuted;
+                    setIsMuted(nextMuted);
+                    // Also update the actual recording state immediately
+                    if (clientRef.current) {
+                      clientRef.current.setRecordingEnabled(!nextMuted);
+                    }
+                  }}
                   className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 ${isMuted ? 'bg-red-500/80 border border-red-400' : 'bg-white/5 border border-white/10 hover:bg-white/10'}`}
                 >
                   {isMuted ? <MicOff className="w-5 h-5 text-white" /> : <Mic className="w-5 h-5 text-white" />}

@@ -10,8 +10,8 @@ punctuation = ["!", "?", "…", ",", ".", "'", "-"]
 
 try:
     import MeCab
-except ImportError as e:
-    raise ImportError("Japanese requires mecab-python3 and unidic-lite.") from e
+except ImportError:
+    MeCab = None
 from num2words import num2words
 
 _CONVRULES = [
@@ -536,14 +536,18 @@ def replace_punctuation(text):
 
     return replaced_text
 
-from pykakasi import kakasi
-# Initialize kakasi object
-kakasi = kakasi()
-# Set options for converting Chinese characters to Katakana
-kakasi.setMode("J", "K")  # Chinese to Katakana
-kakasi.setMode("H", "K")  # Hiragana to Katakana
-# Convert Chinese characters to Katakana
-conv = kakasi.getConverter()
+try:
+    from pykakasi import kakasi
+    # Initialize kakasi object
+    kakasi_obj = kakasi()
+    # Set options for converting Chinese characters to Katakana
+    kakasi_obj.setMode("J", "K")  # Chinese to Katakana
+    kakasi_obj.setMode("H", "K")  # Hiragana to Katakana
+    # Convert Chinese characters to Katakana
+    conv = kakasi_obj.getConverter()
+except ImportError:
+    kakasi_obj = None
+    conv = None
 
 def text_normalize(text):
     res = unicodedata.normalize("NFKC", text)

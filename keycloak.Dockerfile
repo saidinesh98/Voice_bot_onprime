@@ -1,8 +1,9 @@
 # Dockerfile for Keycloak with custom theme
 FROM quay.io/keycloak/keycloak:24.0.0
 
-# Copy custom theme
+# Copy custom themes
 COPY ./aura-ai-theme /opt/keycloak/themes/aura-ai-theme
+COPY ./aura-ai-ethereal-theme /opt/keycloak/themes/aura-ai-ethereal-theme
 
 # Optional: Add any custom provider JARs if you have them
 # COPY ./providers/*.jar /opt/keycloak/providers/

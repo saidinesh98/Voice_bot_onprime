@@ -1,8 +1,13 @@
 import os
 import re
 
-import cn2an
-from pypinyin import lazy_pinyin, Style
+try:
+    import cn2an
+    from pypinyin import lazy_pinyin, Style
+except ImportError:
+    cn2an = None
+    lazy_pinyin = None
+    Style = None
 
 from .symbols import punctuation
 from .tone_sandhi import ToneSandhi
@@ -13,7 +18,10 @@ pinyin_to_symbol_map = {
     for line in open(os.path.join(current_file_path, "opencpop-strict.txt")).readlines()
 }
 
-import jieba.posseg as psg
+try:
+    import jieba.posseg as psg
+except ImportError:
+    psg = None
 
 
 rep_map = {

@@ -12,7 +12,7 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 import torch
-from multi_lingual.stt import STT
+from multi_lingual.stt import STT, detect_script
 from multi_lingual.llm_client import LLMClient
 from multi_lingual.tts_local import TTSLocal
 from database_manager import DatabaseManager
@@ -31,7 +31,7 @@ app.add_middleware(
 )
 
 print("\n📦 Loading Multi-lingual Models...")
-stt = STT(model_size='tiny') # Changed to tiny for speed
+stt = STT(model_size='base') # Upgraded from 'tiny' for better Arabic/Hindi detection
 tts_local = TTSLocal()
 llm_url = os.getenv("LLM_SERVER_URL", "http://llm-server:8000")
 llm = LLMClient(server_url=llm_url)
@@ -49,8 +49,7 @@ vad_model, vad_utils = torch.hub.load(repo_or_dir='snakers4/silero-vad', model='
 
 
 LANG_MAP = {
-    'hi': 'hi', 'ta': 'ta', 'te': 'te', 'ml': 'ml', 'bn': 'bn',
-    'ar': 'ar', 'en': 'en', 'fr': 'fr', 'de': 'de', 'es': 'es', 'ko': 'ko', 'pl': 'pl'
+    'en': 'en', 'hi': 'hi', 'te': 'te', 'ta': 'ta', 'ar': 'ar', 'de': 'de'
 }
 
 # Removed _tts_sync as we now use TTSLocal through run_pipeline
@@ -71,6 +70,12 @@ async def websocket_endpoint(websocket: WebSocket):
     user_name = user_payload.get("preferred_username", "Unknown User")
     print(f"\n{'='*60}\n🚀  FRONTEND CONNECTED (User: {user_name})\n{'='*60}")
 
+    # --- SESSION RESET ---
+    llm.clear_history()
+    # locked_lang: set once detection is confident; lock_votes: consecutive agreements before locking
+    session_state = {"locked_lang": None, "lock_votes": {}, "lock_threshold": 2}
+    # ---------------------
+
     # Heartbeat task to keep Cloudflare/Gateways alive
     async def send_heartbeat():
         try:
@@ -89,8 +94,7 @@ async def websocket_endpoint(websocket: WebSocket):
     # processing:   valid speech found, LLM/TTS running — discard incoming audio
     transcribing = False
     processing = False
-    # Once the first language is detected reliably, we lock it for the session
-    session_state = {"locked_lang": None}
+    # Duplicated declaration removed — session_state already set above
     was_speaking = False
     silence_duration = 0  # In chunks
     
@@ -110,35 +114,46 @@ async def websocket_endpoint(websocket: WebSocket):
                 return
 
             # --- TEXT-BASED LANGUAGE CORRECTION ---
-            try:
-                # Protection for short common English words
-                if text.lower().strip() in ["yes", "no", "ok", "hello", "hi"]:
-                    text_lang = "en"
-                else:
+            # Priority 1: Unicode script detection — certain for Indian/Arabic scripts.
+            # Priority 2: langdetect for en vs de disambiguation (both use Latin script).
+            # We do NOT fall back to langdetect for Indian/Arabic — script detection covers those.
+            SUPPORTED_TARGETS = {'en', 'hi', 'te', 'ta', 'ar', 'de'}
+
+            script_lang = detect_script(text)
+            if script_lang and script_lang != detected_lang:
+                print(f"🔤 Script override: Whisper={detected_lang} → {script_lang} (Unicode block match)")
+                detected_lang = script_lang
+            elif not script_lang and len(text.strip()) >= 8:
+                # Latin-script text — use langdetect to tell English from German
+                try:
                     text_lang = detect(text)
-                
-                if text_lang != detected_lang:
-                    # Special check for Chinese (langdetect uses 'zh-cn' or 'zh-tw', we use 'zh')
-                    corr_lang = text_lang.split('-')[0]
-                    if corr_lang != detected_lang:
-                        print(f"🔄 Correcting language from {detected_lang} to {corr_lang} based on text")
-                        detected_lang = corr_lang
-            except Exception as e:
-                # langdetect fails if no features, just keep whisper's guess
-                pass
-            # --------------------------------------
+                    if text_lang in {'en', 'de'} and text_lang != detected_lang:
+                        print(f"🔄 LangDetect override: {detected_lang} → {text_lang}")
+                        detected_lang = text_lang
+                except Exception as e:
+                    print(f"⚠️ LangDetect error: {e}")
+            # ----------------------------------------
 
             # Valid speech — lock out new audio until response is done
             processing = True
             audio_buffer.clear()
 
-            # --- LANGUAGE LOCKING ---
+            # --- LANGUAGE LOCKING (vote-based, not first-frame) ---
             if session_state["locked_lang"]:
+                # Once locked, always use locked language
                 detected_lang = session_state["locked_lang"]
             else:
-                session_state["locked_lang"] = detected_lang
-                print(f"🔒 Language locked to: {detected_lang.upper()}")
-            # ------------------------
+                # Accumulate votes; lock once we've seen the same language N times
+                votes = session_state["lock_votes"]
+                votes[detected_lang] = votes.get(detected_lang, 0) + 1
+                best_lang = max(votes, key=votes.get)
+                if votes[best_lang] >= session_state["lock_threshold"]:
+                    session_state["locked_lang"] = best_lang
+                    detected_lang = best_lang
+                    print(f"🔒 Language locked to: {best_lang.upper()} (after {votes[best_lang]} confirmations)")
+                else:
+                    print(f"🗳️  Language vote: {best_lang.upper()} ({votes[best_lang]}/{session_state['lock_threshold']})")
+            # -------------------------------------------------------
 
             print(f"\n📝 You [{detected_lang.upper()}]: {text}")
             try:
@@ -200,6 +215,7 @@ async def websocket_endpoint(websocket: WebSocket):
                             try:
                                 await websocket.send_json({"type": "text", "text": prev_sentence + " "})
                                 await websocket.send_bytes(audio_wav)
+                                pending_tts = None # Clear after sending to avoid double delivery
                             except Exception:
                                 print("⚠️ Failed to send data (client disconnected)")
                                 return
@@ -219,6 +235,22 @@ async def websocket_endpoint(websocket: WebSocket):
 
                 # Start TTS for CURRENT sentence
                 pending_tts = loop.run_in_executor(None, partial(tts_local.generate_wav, sentence, detected_lang))
+
+            # --- FINAL CLEANUP ---
+            # Send the very last sentence if it is still pending
+            if pending_tts is not None:
+                try:
+                    audio_wav = await pending_tts
+                    if audio_wav:
+                        try:
+                            await websocket.send_json({"type": "text", "text": prev_sentence + " "})
+                            await websocket.send_bytes(audio_wav)
+                            pending_tts = None
+                        except Exception:
+                            pass
+                except Exception as tts_err:
+                    print(f"⚠️  Final TTS Error: {tts_err}")
+            # ---------------------
 
             print(f"\n[{datetime.now().strftime('%H:%M:%S')}] 🤖 Bot [{detected_lang.upper()}]: {full_response.strip()}")
             print("✅ Full response sent\n")
