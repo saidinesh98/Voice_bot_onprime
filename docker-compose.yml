@@ -2,6 +2,7 @@ services:
   db:
     image: postgres:15-alpine
     container_name: voice-bot-db
+    restart: unless-stopped
     environment:
       POSTGRES_USER: ${DB_USER:-postgres}
       POSTGRES_PASSWORD: ${DB_PASS:-root}
@@ -16,6 +17,7 @@ services:
       context: .
       dockerfile: keycloak.Dockerfile
     container_name: voice-bot-keycloak
+    restart: unless-stopped
     command: start-dev --import-realm
     environment:
       KEYCLOAK_ADMIN: admin
@@ -37,18 +39,20 @@ services:
   ollama:
     image: ollama/ollama:latest
     container_name: voice-bot-ollama
+    restart: unless-stopped
     volumes:
       - ollama_data:/root/.ollama
       - ./ollama_init.sh:/entrypoint.sh
     entrypoint: ["/bin/bash", "/entrypoint.sh"]
     ports:
-      - "11434:11434"
+      - "11435:11434"
 
   llm-server:
     build:
       context: .
       dockerfile: llm_server.Dockerfile
     container_name: voice-bot-llm-server
+    restart: unless-stopped
     environment:
       - OLLAMA_HOST=http://ollama:11434
     ports:
@@ -63,6 +67,7 @@ services:
       context: .
       dockerfile: backend.Dockerfile
     container_name: voice-bot-backend
+    restart: unless-stopped
     environment:
       - DB_HOST=db
       - DB_NAME=${DB_NAME:-postgres}
@@ -87,6 +92,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: voice-bot-frontend
+    restart: unless-stopped
     ports:
       - "3000:80"
     depends_on:
@@ -95,6 +101,7 @@ services:
   tunnel:
     image: cloudflare/cloudflared:latest
     container_name: voice-bot-tunnel
+    restart: unless-stopped
     command: tunnel --url http://frontend:80
     depends_on:
       - frontend
